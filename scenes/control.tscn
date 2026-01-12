@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://cr5qa1pcmr77f"]
 
-[ext_resource type="Script" uid="uid://tb6ex7nu4eoi" path="res://scripts/control.gd" id="1_0fbet"]
+[ext_resource type="Script" uid="uid://tb6ex7nu4eoi" path="res://scripts/control.gd" id="1_5p55f"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_0fbet"]
 font_size = 60
@@ -19,7 +19,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_0fbet")
+script = ExtResource("1_5p55f")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 layout_mode = 1
@@ -36,3 +36,39 @@ grow_horizontal = 2
 layout_mode = 2
 text = "KotstulleGame"
 label_settings = SubResource("LabelSettings_0fbet")
+
+[node name="VBoxBtnContainer" type="VBoxContainer" parent="."]
+custom_minimum_size = Vector2(500, 0)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 14
+
+[node name="StartBtn" type="Button" parent="VBoxBtnContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Start New Game"
+
+[node name="LoadBtn" type="Button" parent="VBoxBtnContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Load Game"
+
+[node name="CreditsBtn" type="Button" parent="VBoxBtnContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Credits"
+
+[node name="QuitBtn" type="Button" parent="VBoxBtnContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Quit"
