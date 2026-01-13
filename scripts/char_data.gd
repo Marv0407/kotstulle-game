@@ -10,7 +10,7 @@ class_name CharData
 @export var luck: int
 @export var speed: int
 @export var level: int
-const resistances := {
+@export var resistances := {
 	"FIRE": 0,
 	"POISON": 0,
 	#TODO
