@@ -32,3 +32,6 @@ func _on_credits_btn_pressed() -> void:
 
 func _on_quit_btn_pressed() -> void:
 	get_tree().quit()
+
+
+#leck eier wenn ich das sage !
