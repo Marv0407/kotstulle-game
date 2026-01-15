@@ -13,5 +13,6 @@ class_name CharData
 @export var resistances := {
 	"FIRE": 0,
 	"POISON": 0,
+	"PSYCHIC": 0,
 	#TODO
 }

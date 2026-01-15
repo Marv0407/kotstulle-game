@@ -1,0 +1,41 @@
+[gd_scene load_steps=6 format=3 uid="uid://dcmvwdjbytety"]
+
+[ext_resource type="Script" uid="uid://dt83mh3hbxwe6" path="res://scripts/battle_test.gd" id="1_legaw"]
+[ext_resource type="Script" uid="uid://bhdts0363nnm8" path="res://scripts/battle_manager.gd" id="2_tp7yc"]
+[ext_resource type="Script" uid="uid://b4vfx11poblgj" path="res://scripts/char_data.gd" id="3_smx2l"]
+[ext_resource type="Resource" uid="uid://d27kr4qwd3ng" path="res://ressources/hero.tres" id="4_5txia"]
+[ext_resource type="Resource" uid="uid://d3g0113atagwb" path="res://ressources/slime.tres" id="5_766wr"]
+
+[node name="BattleTest" type="Node"]
+script = ExtResource("1_legaw")
+
+[node name="BattleManager" type="Node" parent="."]
+script = ExtResource("2_tp7yc")
+party_data = Array[ExtResource("3_smx2l")]([ExtResource("4_5txia"), ExtResource("4_5txia")])
+enemy_data = Array[ExtResource("3_smx2l")]([ExtResource("5_766wr")])
+
+[node name="DebugUI" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="LogLabel" type="Label" parent="DebugUI"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+
+[node name="StartBattleBtn" type="Button" parent="DebugUI"]
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_top = -15.5
+offset_right = 96.0
+offset_bottom = 15.5
+grow_vertical = 2
+text = "Start Battle"
+
+[connection signal="pressed" from="DebugUI/StartBattleBtn" to="." method="_on_start_battle_btn_pressed"]
