@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="CharData" load_steps=2 format=3 uid="uid://dayx4q8vorwm3"]
+
+[ext_resource type="Script" uid="uid://b4vfx11poblgj" path="res://scripts/char_data.gd" id="1_8o84g"]
+
+[resource]
+script = ExtResource("1_8o84g")
+name = "Slime"
+max_hp = 40
+atk = 8
+def = 4
+sp_atk = 6
+sp_def = 2
+luck = 6
+speed = 6
+level = 1
+metadata/_custom_type_script = "uid://b4vfx11poblgj"

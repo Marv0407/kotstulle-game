@@ -1,18 +1,19 @@
-[gd_scene load_steps=6 format=3 uid="uid://dcmvwdjbytety"]
+[gd_scene load_steps=7 format=3 uid="uid://dcmvwdjbytety"]
 
 [ext_resource type="Script" uid="uid://dt83mh3hbxwe6" path="res://scripts/battle_test.gd" id="1_legaw"]
 [ext_resource type="Script" uid="uid://bhdts0363nnm8" path="res://scripts/battle_manager.gd" id="2_tp7yc"]
 [ext_resource type="Script" uid="uid://b4vfx11poblgj" path="res://scripts/char_data.gd" id="3_smx2l"]
-[ext_resource type="Resource" uid="uid://d27kr4qwd3ng" path="res://ressources/hero.tres" id="4_5txia"]
-[ext_resource type="Resource" uid="uid://d3g0113atagwb" path="res://ressources/slime.tres" id="5_766wr"]
+[ext_resource type="Resource" uid="uid://d27kr4qwd3ng" path="res://ressources/Player Characters/hero.tres" id="4_5txia"]
+[ext_resource type="Resource" uid="uid://d3g0113atagwb" path="res://ressources/Enemies/Juden.tres" id="5_766wr"]
+[ext_resource type="Resource" uid="uid://cmgrh8r8u4m8k" path="res://ressources/Enemies/Fistus Jünger.tres" id="6_tp7yc"]
 
 [node name="BattleTest" type="Node"]
 script = ExtResource("1_legaw")
 
 [node name="BattleManager" type="Node" parent="."]
 script = ExtResource("2_tp7yc")
-party_data = Array[ExtResource("3_smx2l")]([ExtResource("4_5txia"), ExtResource("4_5txia")])
-enemy_data = Array[ExtResource("3_smx2l")]([ExtResource("5_766wr")])
+party_data = Array[ExtResource("3_smx2l")]([ExtResource("4_5txia")])
+enemy_data = Array[ExtResource("3_smx2l")]([ExtResource("5_766wr"), ExtResource("6_tp7yc")])
 
 [node name="DebugUI" type="Control" parent="."]
 layout_mode = 3
@@ -37,5 +38,15 @@ offset_right = 96.0
 offset_bottom = 15.5
 grow_vertical = 2
 text = "Start Battle"
+
+[node name="TurnOrderContainer" type="HBoxContainer" parent="DebugUI"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -20.0
+offset_right = 20.0
+offset_bottom = 40.0
+grow_horizontal = 2
 
 [connection signal="pressed" from="DebugUI/StartBattleBtn" to="." method="_on_start_battle_btn_pressed"]

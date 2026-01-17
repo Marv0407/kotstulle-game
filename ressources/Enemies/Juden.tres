@@ -4,7 +4,7 @@
 
 [resource]
 script = ExtResource("1_huch4")
-name = "Slime"
+name = "Jude"
 max_hp = 40
 atk = 8
 def = 4

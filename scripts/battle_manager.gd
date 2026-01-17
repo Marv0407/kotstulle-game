@@ -9,10 +9,11 @@ class_name  BattleManager
 var party: Array[BattleCharacter] = []
 var enemies: Array[BattleCharacter] = []
 var turn_order: Array[BattleCharacter] = []
-var current_turn_index := 0
+var current_turn_index : int
 enum BattleState {
 	START,
 	PLAYER_TURN,
+	TARGET_SELECT,
 	ENEMY_TURN,
 	END
 }
