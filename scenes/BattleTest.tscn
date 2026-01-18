@@ -10,10 +10,11 @@
 [node name="BattleTest" type="Node"]
 script = ExtResource("1_legaw")
 
-[node name="BattleManager" type="Node" parent="."]
+[node name="BattleManager" type="Node" parent="." node_paths=PackedStringArray("turn_order_container")]
 script = ExtResource("2_tp7yc")
 party_data = Array[ExtResource("3_smx2l")]([ExtResource("4_5txia")])
 enemy_data = Array[ExtResource("3_smx2l")]([ExtResource("5_766wr"), ExtResource("6_tp7yc")])
+turn_order_container = NodePath("../DebugUI/TurnOrderContainer")
 
 [node name="DebugUI" type="Control" parent="."]
 layout_mode = 3

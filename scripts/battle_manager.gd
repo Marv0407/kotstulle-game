@@ -6,6 +6,7 @@ class_name  BattleManager
 ####################
 @export var party_data: Array[CharData]
 @export var enemy_data: Array[CharData]
+@export var turn_order_container: HBoxContainer
 var party: Array[BattleCharacter] = []
 var enemies: Array[BattleCharacter] = []
 var turn_order: Array[BattleCharacter] = []
@@ -28,15 +29,16 @@ var state := BattleState.START
 func _ready() -> void:
 	pass # Replace with function body.
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
-	pass
+## Called every frame. 'delta' is the elapsed time since the previous frame.
+#func _process(delta: float) -> void:
+	#pass
 
 func start_battle():
 	party.clear()
 	enemies.clear()
 	turn_order.clear()
-
+	refresh_turn_order_ui()
+	
 	for data in party_data:
 		var bc = BattleCharacter.new()
 		bc.setup(data)
@@ -78,6 +80,7 @@ func next_turn():
 	current_turn_index += 1
 	if current_turn_index >= turn_order.size():
 		current_turn_index = 0
+	refresh_turn_order_ui()
 
 func attack(attacker: BattleCharacter, target: BattleCharacter):
 	var damage = max(attacker.data.atk - target.data.def, 1)
@@ -137,6 +140,21 @@ func get_alive_enemies() -> Array[BattleCharacter]:
 
 func is_battle_over() -> bool:
 	return get_alive_party().is_empty() or get_alive_enemies().is_empty()
+
+func refresh_turn_order_ui():
+	for child in turn_order_container.get_children():
+		child.queue_free()
+
+	for i in range(turn_order.size()):
+		var character = turn_order[i]
+		var label := Label.new()
+		label.text = character.data.name
+
+		if i == current_turn_index:
+			label.text = "> " + label.text
+			label.add_theme_color_override("font_color", Color.YELLOW)
+
+		turn_order_container.add_child(label)
 
 func end_battle(player_won: bool):
 	if player_won:
