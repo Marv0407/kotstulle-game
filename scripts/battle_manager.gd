@@ -11,7 +11,7 @@ var party: Array[BattleCharacter] = []
 var enemies: Array[BattleCharacter] = []
 var turn_order: Array[BattleCharacter] = []
 var current_turn_index : int
-enum BattleState {
+enum BattleState { #TODO Turn States später einfügen um Auto Battle abzulösen
 	START,
 	PLAYER_TURN,
 	TARGET_SELECT,
@@ -33,7 +33,8 @@ func _ready() -> void:
 #func _process(delta: float) -> void:
 	#pass
 
-func start_battle():
+func start_battle(): # Cleart Daten, erstellt Instanzen, sortiert nach Initiative/Speed und startet Loop (vorerst)
+
 	party.clear()
 	enemies.clear()
 	turn_order.clear()
@@ -48,7 +49,7 @@ func start_battle():
 		var bc = BattleCharacter.new()
 		bc.setup(data)
 		enemies.append(bc)
-
+	
 	calculate_turn_order()
 	current_turn_index = 0
 
@@ -56,7 +57,7 @@ func start_battle():
 	process_battle_loop()
 	
 
-func process_turn():
+func process_turn(): #TODO hiermit später durch die states iterieren 
 	var actor = get_current_actor()
 
 	if actor in party:
@@ -68,7 +69,6 @@ func calculate_turn_order():
 	turn_order.clear()
 	turn_order.append_array(party)
 	turn_order.append_array(enemies)
-
 	turn_order.sort_custom(func(a, b):
 		return a.data.speed > b.data.speed
 		)
@@ -99,7 +99,7 @@ func execute_turn():
 	if not actor.is_alive():
 		next_turn()
 		return
-
+	# Ziel bestimmen
 	if actor in party:
 		var targets = get_alive_enemies()
 		if targets.is_empty():
@@ -115,7 +115,7 @@ func execute_turn():
 
 	next_turn()
 
-func process_battle_loop():
+func process_battle_loop(): # prüft ob kampf vorbei ist, führt einen zug aus und ruft sich danach wieder auf # TODO später löschen und durch Turn States ersetzen
 	if is_battle_over():
 		return
 
@@ -142,11 +142,14 @@ func is_battle_over() -> bool:
 	return get_alive_party().is_empty() or get_alive_enemies().is_empty()
 
 func refresh_turn_order_ui():
+	if not turn_order_container: return
+
 	for child in turn_order_container.get_children():
 		child.queue_free()
 
 	for i in range(turn_order.size()):
 		var character = turn_order[i]
+		if not character.is_alive(): continue # Tote aus UI ausblenden
 		var label := Label.new()
 		label.text = character.data.name
 
@@ -156,7 +159,8 @@ func refresh_turn_order_ui():
 
 		turn_order_container.add_child(label)
 
-func end_battle(player_won: bool):
+func end_battle(player_won: bool): #TODO für spätere Turn States..
+	state = BattleState.END
 	if player_won:
 		print(">>> PARTY GEWINNT <<<")
 	else:
