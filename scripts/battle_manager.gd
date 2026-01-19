@@ -38,7 +38,6 @@ func start_battle(): # Cleart Daten, erstellt Instanzen, sortiert nach Initiativ
 	party.clear()
 	enemies.clear()
 	turn_order.clear()
-	refresh_turn_order_ui()
 	
 	for data in party_data:
 		var bc = BattleCharacter.new()
@@ -52,7 +51,8 @@ func start_battle(): # Cleart Daten, erstellt Instanzen, sortiert nach Initiativ
 	
 	calculate_turn_order()
 	current_turn_index = 0
-
+	refresh_turn_order_ui()
+	
 	print("--- Kampf beginnt ---")
 	process_battle_loop()
 	
@@ -60,10 +60,31 @@ func start_battle(): # Cleart Daten, erstellt Instanzen, sortiert nach Initiativ
 func process_turn(): #TODO hiermit später durch die states iterieren 
 	var actor = get_current_actor()
 
+	if not actor.is_alive():
+		next_turn()
+		process_turn()
+		return
+
 	if actor in party:
 		state = BattleState.PLAYER_TURN
+		print("Spieler ist am Zug: ", actor.data.name)
 	else:
 		state = BattleState.ENEMY_TURN
+		print("Gegner ist am Zug: ", actor.data.name)
+		execute_enemy_turn()
+
+func execute_enemy_turn():
+	var actor = get_current_actor()
+	var targets = get_alive_party()
+
+	if targets.is_empty():
+		end_battle(false)
+		return
+
+	attack(actor, targets.pick_random())
+	await get_tree().create_timer(0.8).timeout
+	next_turn()
+	process_turn()
 
 func calculate_turn_order():
 	turn_order.clear()
@@ -77,10 +98,21 @@ func get_current_actor() -> BattleCharacter:
 	return turn_order[current_turn_index]
 
 func next_turn():
-	current_turn_index += 1
-	if current_turn_index >= turn_order.size():
-		current_turn_index = 0
-	refresh_turn_order_ui()
+	var checked := 0
+
+	while checked < turn_order.size():
+		current_turn_index += 1
+		if current_turn_index >= turn_order.size():
+			current_turn_index = 0
+
+		var actor = get_current_actor()
+		if actor.is_alive():
+			refresh_turn_order_ui()
+			return
+
+		checked += 1
+
+	end_battle(true)
 
 func attack(attacker: BattleCharacter, target: BattleCharacter):
 	var damage = max(attacker.data.atk - target.data.def, 1)
@@ -92,6 +124,20 @@ func attack(attacker: BattleCharacter, target: BattleCharacter):
 
 	if target.current_hp <= 0:
 		print(target.data.name, " wurde besiegt!")
+
+func debug_player_attack():
+	if state != BattleState.PLAYER_TURN:
+		return
+
+	var actor = get_current_actor()
+	var targets = get_alive_enemies()
+	if targets.is_empty():
+		end_battle(true)
+		return
+
+	attack(actor, targets[0])
+	next_turn()
+	process_turn()
 
 func execute_turn():
 	var actor = get_current_actor()
@@ -119,11 +165,8 @@ func process_battle_loop(): # prüft ob kampf vorbei ist, führt einen zug aus u
 	if is_battle_over():
 		return
 
-	execute_turn()
-
-	await get_tree().create_timer(0.8).timeout
-	process_battle_loop()
-
+	process_turn()
+	
 ####################
 # Helpers
 ####################
@@ -131,6 +174,22 @@ func print_turn_order(): #TODO delete later
 	print("Turn Order:")
 	for c in turn_order:
 		print(" - ", c.data.name)
+
+func is_player_turn() -> bool:
+	var actor = get_current_actor()
+	return actor.is_player_controlled
+
+func enter_player_turn():
+	state = BattleState.PLAYER_TURN
+	emit_signal("player_turn_started", get_current_actor())
+
+func enter_enemy_turn():
+	state = BattleState.ENEMY_TURN
+
+	var enemy = get_current_actor()
+	var target = get_alive_party()
+	attack(enemy, target)
+	next_turn()
 
 func get_alive_party() -> Array[BattleCharacter]:
 	return party.filter(func(c): return c.is_alive())

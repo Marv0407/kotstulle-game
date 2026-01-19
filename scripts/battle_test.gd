@@ -2,6 +2,8 @@ extends Node
 
 @onready var battle_manager = $BattleManager
 @onready var log_label = $DebugUI/LogLabel
+@onready var attack_btn = $DebugUI/VBoxContainer/BasicAttackBtn
+@onready var start_battle_btn = $DebugUI/VBoxContainer/StartBattleBtn
 
 
 # Called when the node enters the scene tree for the first time.
@@ -14,4 +16,8 @@ func _ready() -> void:
 
 func _on_start_battle_btn_pressed() -> void:
 	log_label.text += "\n--- Kampf startet ---\n"
+	attack_btn.disabled = false
 	battle_manager.start_battle()
+
+func _on_basic_attack_pressed() -> void:
+	battle_manager.debug_player_attack()
