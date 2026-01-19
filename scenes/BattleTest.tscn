@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://dcmvwdjbytety"]
+[gd_scene load_steps=9 format=3 uid="uid://dcmvwdjbytety"]
 
 [ext_resource type="Script" uid="uid://dt83mh3hbxwe6" path="res://scripts/battle_test.gd" id="1_legaw"]
 [ext_resource type="Script" uid="uid://bhdts0363nnm8" path="res://scripts/battle_manager.gd" id="2_tp7yc"]
@@ -6,6 +6,12 @@
 [ext_resource type="Resource" uid="uid://d27kr4qwd3ng" path="res://ressources/Player Characters/hero.tres" id="4_5txia"]
 [ext_resource type="Resource" uid="uid://d3g0113atagwb" path="res://ressources/Enemies/Juden.tres" id="5_766wr"]
 [ext_resource type="Resource" uid="uid://cmgrh8r8u4m8k" path="res://ressources/Enemies/Fistus Jünger.tres" id="6_tp7yc"]
+[ext_resource type="Texture2D" uid="uid://c15f56jyfo8js" path="res://ressources/sprites/fire1.png" id="7_smx2l"]
+
+[sub_resource type="Curve" id="Curve_5txia"]
+_limits = [-200.0, 200.0, 0.0, 1.0]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.14534885, 191.01123), 0.0, 0.0, 0, 0, Vector2(0.71511626, 15.730347), 0.0, 0.0, 0, 0]
+point_count = 3
 
 [node name="BattleTest" type="Node"]
 script = ExtResource("1_legaw")
@@ -58,6 +64,39 @@ offset_left = -20.0
 offset_right = 20.0
 offset_bottom = 40.0
 grow_horizontal = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="DebugUI"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ParticelSpawner" type="CPUParticles2D" parent="DebugUI/HBoxContainer"]
+emitting = false
+amount = 12
+texture = ExtResource("7_smx2l")
+lifetime = 0.2
+one_shot = true
+speed_scale = 0.8
+explosiveness = 0.95
+emission_shape = 1
+emission_sphere_radius = 1.0
+spread = 180.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 5.0
+initial_velocity_max = 10.0
+angular_velocity_min = 5.0
+angular_velocity_max = 10.0
+linear_accel_max = 32.95
+linear_accel_curve = SubResource("Curve_5txia")
 
 [connection signal="pressed" from="DebugUI/VBoxContainer/StartBattleBtn" to="." method="_on_start_battle_btn_pressed"]
 [connection signal="pressed" from="DebugUI/VBoxContainer/BasicAttackBtn" to="." method="_on_basic_attack_pressed"]

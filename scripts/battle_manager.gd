@@ -19,7 +19,7 @@ enum BattleState { #TODO Turn States später einfügen um Auto Battle abzulösen
 	END
 }
 var state := BattleState.START
-
+@onready var particelSpawner = $"../DebugUI/HBoxContainer/ParticelSpawner"
 
 ####################
 # Functions
@@ -136,6 +136,8 @@ func debug_player_attack():
 		return
 
 	attack(actor, targets[0])
+	particelSpawner.restart()
+	
 	next_turn()
 	process_turn()
 
