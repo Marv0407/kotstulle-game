@@ -21,45 +21,46 @@ enum BattleState { #TODO Turn States später einfügen um Auto Battle abzulösen
 }
 var state := BattleState.START
 @onready var particelSpawner = $"../DebugUI/HBoxContainer/ParticelSpawner"
-@onready var spawn_point = $"../DebugUI/EnemyPartyContainer"
+@onready var spawn_point = $"../DebugUI/EnemyPositionAnchor/EnemyPartyContainer"
 
 ####################
 # Functions
 ####################
-
-# Called when the node enters the scene tree for the first time.
-func _ready() -> void:
-	pass # Replace with function body.
-
-## Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(delta: float) -> void:
-	#pass
-
 func start_battle(): # Cleart Daten, erstellt Instanzen, sortiert nach Initiative/Speed und startet Loop (vorerst)
 	
 	party.clear()
 	enemies.clear()
 	turn_order.clear()
-	
-	var count = enemies.size()
-	var spacing = 250.0
+	for child in spawn_point.get_children():
+		child.queue_free()
 	
 	for data in party_data:
 		var bc = BattleCharacter.new()
 		bc.setup(data)
 		party.append(bc)
 
-	#for data in enemy_data:
-		#var bc = BattleCharacter.new()
-		#bc.setup(data)
-		#enemies.append(bc)
+	for data in enemy_data:
+		var bc = BattleCharacter.new()
+		bc.setup(data)
+		enemies.append(bc)
+		
+	var count = enemies.size()
+	var spacing = 250.0
 	
 	for i in range(count):
-		var new_enemy = enemy_scene.instantiate()
-		spawn_point.add_child(new_enemy)
-		var x_offset = (i- (count - 1) / 2.0) * spacing
-		new_enemy.position.x = x_offset
+		# Create slot
+		var new_slot = enemy_scene.instantiate()
+		spawn_point.add_child(new_slot)
 		
+		# Dynamic positioning
+		var x_offset = (i - (count - 1) / 2.0) * spacing
+		new_slot.position = Vector2(x_offset, 0)
+		
+		# get sprites from  resource 
+		var resource_sprite = enemies[i].data.sprite
+		var sprite_node = new_slot.get_node("Sprite2D")
+		sprite_node.texture = resource_sprite
+		enemies[i].battle_node = new_slot
 		
 	calculate_turn_order()
 	current_turn_index = 0
@@ -68,8 +69,6 @@ func start_battle(): # Cleart Daten, erstellt Instanzen, sortiert nach Initiativ
 	print("--- Kampf beginnt ---")
 	process_battle_loop()
 	
-
-
 
 func process_turn(): #TODO hiermit später durch die states iterieren 
 	var actor = get_current_actor()
@@ -131,13 +130,15 @@ func next_turn():
 func attack(attacker: BattleCharacter, target: BattleCharacter):
 	var damage = max(attacker.data.atk - target.data.def, 1)
 	target.current_hp -= damage
-
-	print(attacker.data.name, " greift ", target.data.name,
-		  " an für ", damage, " Schaden. (",
-		  target.current_hp, "/", target.data.max_hp, ")")
-
+	
+	if target.battle_node:
+		var tween = create_tween()
+		tween.tween_property(target.battle_node, "modulate", Color.RED, 0.1)
+		tween.tween_property(target.battle_node, "modulate", Color.WHITE, 0.1)
+		
 	if target.current_hp <= 0:
 		print(target.data.name, " wurde besiegt!")
+		despawn_enemy_visual(target)
 
 func debug_player_attack():
 	if state != BattleState.PLAYER_TURN:
@@ -224,7 +225,7 @@ func refresh_turn_order_ui():
 
 	for i in range(turn_order.size()):
 		var character = turn_order[i]
-		if not character.is_alive(): continue # Tote aus UI ausblenden
+		if not character.is_alive(): continue
 		var label := Label.new()
 		label.text = character.data.name
 
@@ -233,6 +234,15 @@ func refresh_turn_order_ui():
 			label.add_theme_color_override("font_color", Color.YELLOW)
 
 		turn_order_container.add_child(label)
+
+func despawn_enemy_visual(character: BattleCharacter):
+	if character.battle_node:
+		# TODO insert other/different animations here later
+		var tween = create_tween()
+		tween.tween_property(character.battle_node, "modulate:a", 0, 0.5)
+		tween.tween_property(character.battle_node, "scale", Vector2.ZERO, 0.5)
+		
+		tween.finished.connect(func(): character.battle_node.queue_free())
 
 func end_battle(player_won: bool): #TODO für spätere Turn States..
 	state = BattleState.END

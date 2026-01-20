@@ -1,6 +1,7 @@
-[gd_resource type="Resource" script_class="CharData" load_steps=2 format=3 uid="uid://dayx4q8vorwm3"]
+[gd_resource type="Resource" script_class="CharData" load_steps=3 format=3 uid="uid://dayx4q8vorwm3"]
 
 [ext_resource type="Script" uid="uid://b4vfx11poblgj" path="res://scripts/char_data.gd" id="1_8o84g"]
+[ext_resource type="Texture2D" uid="uid://bh8cwmw6im54w" path="res://ressources/sprites/Rentner_Stock.png" id="2_812gd"]
 
 [resource]
 script = ExtResource("1_8o84g")
@@ -13,4 +14,5 @@ sp_def = 2
 luck = 6
 speed = 6
 level = 1
+sprite = ExtResource("2_812gd")
 metadata/_custom_type_script = "uid://b4vfx11poblgj"

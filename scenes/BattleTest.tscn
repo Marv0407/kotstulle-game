@@ -1,11 +1,10 @@
-[gd_scene load_steps=9 format=3 uid="uid://dcmvwdjbytety"]
+[gd_scene load_steps=8 format=3 uid="uid://dcmvwdjbytety"]
 
 [ext_resource type="Script" uid="uid://dt83mh3hbxwe6" path="res://scripts/battle_test.gd" id="1_legaw"]
 [ext_resource type="Script" uid="uid://bhdts0363nnm8" path="res://scripts/battle_manager.gd" id="2_tp7yc"]
 [ext_resource type="Script" uid="uid://b4vfx11poblgj" path="res://scripts/char_data.gd" id="3_smx2l"]
 [ext_resource type="Resource" uid="uid://d27kr4qwd3ng" path="res://ressources/Player Characters/hero.tres" id="4_5txia"]
-[ext_resource type="Resource" uid="uid://d3g0113atagwb" path="res://ressources/Enemies/Juden.tres" id="5_766wr"]
-[ext_resource type="Resource" uid="uid://cmgrh8r8u4m8k" path="res://ressources/Enemies/Fistus Jünger.tres" id="6_tp7yc"]
+[ext_resource type="Resource" uid="uid://dayx4q8vorwm3" path="res://ressources/Enemies/Rentner.tres" id="5_tp7yc"]
 [ext_resource type="Texture2D" uid="uid://c15f56jyfo8js" path="res://ressources/sprites/fire1.png" id="7_smx2l"]
 
 [sub_resource type="Curve" id="Curve_5txia"]
@@ -19,7 +18,7 @@ script = ExtResource("1_legaw")
 [node name="BattleManager" type="Node" parent="." node_paths=PackedStringArray("turn_order_container")]
 script = ExtResource("2_tp7yc")
 party_data = Array[ExtResource("3_smx2l")]([ExtResource("4_5txia")])
-enemy_data = Array[ExtResource("3_smx2l")]([ExtResource("5_766wr"), ExtResource("6_tp7yc")])
+enemy_data = Array[ExtResource("3_smx2l")]([ExtResource("5_tp7yc"), ExtResource("5_tp7yc")])
 turn_order_container = NodePath("../DebugUI/CanvasLayer/TurnOrderContainer")
 
 [node name="DebugUI" type="Control" parent="."]
@@ -108,7 +107,21 @@ angular_velocity_max = 10.0
 linear_accel_max = 32.95
 linear_accel_curve = SubResource("Curve_5txia")
 
-[node name="EnemyPartyContainer" type="Node2D" parent="DebugUI"]
+[node name="EnemyPositionAnchor" type="Control" parent="DebugUI"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="EnemyPartyContainer" type="Node2D" parent="DebugUI/EnemyPositionAnchor"]
 
 [connection signal="pressed" from="DebugUI/VBoxContainer/StartBattleBtn" to="." method="_on_start_battle_btn_pressed"]
 [connection signal="pressed" from="DebugUI/VBoxContainer/BasicAttackBtn" to="." method="_on_basic_attack_pressed"]

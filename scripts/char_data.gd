@@ -11,6 +11,7 @@ class_name CharData
 @export var speed: int
 @export var level: int
 @export var portrait: Image
+@export var sprite: Texture2D
 @export var resistances := {
 	"FIRE": 0,
 	"POISON": 0,

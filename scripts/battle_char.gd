@@ -3,6 +3,7 @@ class_name BattleCharacter
 
 var data: CharData
 var current_hp: int
+var battle_node: Node2D
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
