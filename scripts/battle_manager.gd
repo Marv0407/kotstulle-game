@@ -7,6 +7,7 @@ class_name  BattleManager
 @export var party_data: Array[CharData]
 @export var enemy_data: Array[CharData]
 @export var turn_order_container: HBoxContainer
+@export var enemy_scene: PackedScene = preload("res://scenes/EnemySlot.tscn")
 var party: Array[BattleCharacter] = []
 var enemies: Array[BattleCharacter] = []
 var turn_order: Array[BattleCharacter] = []
@@ -20,6 +21,7 @@ enum BattleState { #TODO Turn States später einfügen um Auto Battle abzulösen
 }
 var state := BattleState.START
 @onready var particelSpawner = $"../DebugUI/HBoxContainer/ParticelSpawner"
+@onready var spawn_point = $"../DebugUI/EnemyPartyContainer"
 
 ####################
 # Functions
@@ -34,21 +36,31 @@ func _ready() -> void:
 	#pass
 
 func start_battle(): # Cleart Daten, erstellt Instanzen, sortiert nach Initiative/Speed und startet Loop (vorerst)
-
+	
 	party.clear()
 	enemies.clear()
 	turn_order.clear()
+	
+	var count = enemies.size()
+	var spacing = 250.0
 	
 	for data in party_data:
 		var bc = BattleCharacter.new()
 		bc.setup(data)
 		party.append(bc)
 
-	for data in enemy_data:
-		var bc = BattleCharacter.new()
-		bc.setup(data)
-		enemies.append(bc)
+	#for data in enemy_data:
+		#var bc = BattleCharacter.new()
+		#bc.setup(data)
+		#enemies.append(bc)
 	
+	for i in range(count):
+		var new_enemy = enemy_scene.instantiate()
+		spawn_point.add_child(new_enemy)
+		var x_offset = (i- (count - 1) / 2.0) * spacing
+		new_enemy.position.x = x_offset
+		
+		
 	calculate_turn_order()
 	current_turn_index = 0
 	refresh_turn_order_ui()
@@ -56,6 +68,8 @@ func start_battle(): # Cleart Daten, erstellt Instanzen, sortiert nach Initiativ
 	print("--- Kampf beginnt ---")
 	process_battle_loop()
 	
+
+
 
 func process_turn(): #TODO hiermit später durch die states iterieren 
 	var actor = get_current_actor()
