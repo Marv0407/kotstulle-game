@@ -26,7 +26,7 @@ var state := BattleState.START
 ####################
 # Functions
 ####################
-func start_battle(): # Cleart Daten, erstellt Instanzen, sortiert nach Initiative/Speed und startet Loop (vorerst)
+func start_battle(): 
 	
 	party.clear()
 	enemies.clear()
@@ -135,6 +135,10 @@ func attack(attacker: BattleCharacter, target: BattleCharacter):
 		var tween = create_tween()
 		tween.tween_property(target.battle_node, "modulate", Color.RED, 0.1)
 		tween.tween_property(target.battle_node, "modulate", Color.WHITE, 0.1)
+		var prtcl_pos = target.battle_node.global_position
+		particelSpawner.global_position = prtcl_pos
+		particelSpawner.z_index = 3
+		particelSpawner.restart()
 		
 	if target.current_hp <= 0:
 		print(target.data.name, " wurde besiegt!")
@@ -151,7 +155,6 @@ func debug_player_attack():
 		return
 
 	attack(actor, targets[0])
-	particelSpawner.restart()
 	
 	next_turn()
 	process_turn()
