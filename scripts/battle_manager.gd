@@ -8,6 +8,7 @@ class_name  BattleManager
 @export var enemy_data: Array[CharData]
 @export var turn_order_container: HBoxContainer
 @export var enemy_scene: PackedScene = preload("res://scenes/EnemySlot.tscn")
+@export var damage_popup: PackedScene = preload("res://scenes/DamagePopup.tscn")
 var party: Array[BattleCharacter] = []
 var enemies: Array[BattleCharacter] = []
 var turn_order: Array[BattleCharacter] = []
@@ -68,7 +69,6 @@ func start_battle():
 	
 	print("--- Kampf beginnt ---")
 	process_battle_loop()
-	
 
 func process_turn(): #TODO hiermit später durch die states iterieren 
 	var actor = get_current_actor()
@@ -139,6 +139,7 @@ func attack(attacker: BattleCharacter, target: BattleCharacter):
 		particelSpawner.global_position = prtcl_pos
 		particelSpawner.z_index = 3
 		particelSpawner.restart()
+		spawn_damage_number(target.battle_node.global_position, damage)
 		
 	if target.current_hp <= 0:
 		print(target.data.name, " wurde besiegt!")
@@ -186,7 +187,7 @@ func process_battle_loop(): # prüft ob kampf vorbei ist, führt einen zug aus u
 		return
 
 	process_turn()
-	
+
 ####################
 # Helpers
 ####################
@@ -246,6 +247,20 @@ func despawn_enemy_visual(character: BattleCharacter):
 		tween.tween_property(character.battle_node, "scale", Vector2.ZERO, 0.5)
 		
 		tween.finished.connect(func(): character.battle_node.queue_free())
+
+func spawn_damage_number(pos: Vector2, value: int):
+	var dmg_node = damage_popup.instantiate()
+	get_tree().current_scene.add_child(dmg_node)
+	
+	# some randomness in spawn logic
+	var random_offset = Vector2(randf_range(-20, 20), randf_range(-10, 10))
+	dmg_node.global_position = pos + random_offset
+	
+	# TODO Future crit colors or other colors in case of big dmg
+	var color = Color.WHITE
+	if value > 50: color = Color.YELLOW # example code
+	
+	dmg_node.setup(value, color)
 
 func end_battle(player_won: bool): #TODO für spätere Turn States..
 	state = BattleState.END

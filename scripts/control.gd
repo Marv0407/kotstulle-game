@@ -8,7 +8,6 @@ extends Control
 @onready var load_btn = $VBoxBtnContainer/LoadBtn
 @onready var credits_btn = $VBoxBtnContainer/CreditsBtn
 @onready var quit_btn = $VBoxBtnContainer/QuitBtn
-
 ####################
 # Functions
 ####################

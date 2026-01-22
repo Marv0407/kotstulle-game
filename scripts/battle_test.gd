@@ -5,7 +5,6 @@ extends Node
 @onready var attack_btn = $DebugUI/VBoxContainer/BasicAttackBtn
 @onready var start_battle_btn = $DebugUI/VBoxContainer/StartBattleBtn
 
-
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	log_label.text = "Bereit.\n"
