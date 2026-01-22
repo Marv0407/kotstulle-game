@@ -5,7 +5,7 @@
 
 [resource]
 script = ExtResource("1_jqix2")
-name = "Talahon"
+name = "Pommespanzer"
 max_hp = 40
 atk = 8
 def = 4
