@@ -23,6 +23,7 @@ enum BattleState { #TODO Turn States später einfügen um Auto Battle abzulösen
 var state := BattleState.START
 @onready var particelSpawner = $"../DebugUI/HBoxContainer/ParticelSpawner"
 @onready var spawn_point = $"../DebugUI/EnemyPositionAnchor/EnemyPartyContainer"
+@onready var party_panel: PartyHUD = $"../DebugUI/CanvasLayer/PartyMenuContainer/PartyHUDContainer"
 
 ####################
 # Functions
@@ -32,6 +33,7 @@ func start_battle():
 	party.clear()
 	enemies.clear()
 	turn_order.clear()
+
 	for child in spawn_point.get_children():
 		child.queue_free()
 
@@ -39,7 +41,9 @@ func start_battle():
 		var bc = BattleCharacter.new()
 		bc.setup(data)
 		party.append(bc)
-
+	
+	party_panel.populate(party)
+	
 	for data in enemy_data:
 		var bc = BattleCharacter.new()
 		bc.setup(data)
@@ -131,6 +135,12 @@ func attack(attacker: BattleCharacter, target: BattleCharacter):
 	var damage = max(attacker.data.atk - target.data.def, 1)
 	target.current_hp -= damage
 
+	if target in party:
+		for ui in party_panel.get_children():
+			if ui.character == target:
+				ui.update_hp()
+				break
+
 	if target.battle_node:
 		var tween = create_tween()
 		tween.tween_property(target.battle_node, "modulate", Color.RED, 0.1)
@@ -156,6 +166,8 @@ func debug_player_attack():
 		return
 
 	attack(actor, targets[0])
+	
+	await get_tree().create_timer(0.8).timeout
 	
 	next_turn()
 	process_turn()

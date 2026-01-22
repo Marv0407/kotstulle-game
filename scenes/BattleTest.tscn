@@ -1,10 +1,12 @@
-[gd_scene load_steps=8 format=3 uid="uid://dcmvwdjbytety"]
+[gd_scene load_steps=10 format=3 uid="uid://dcmvwdjbytety"]
 
 [ext_resource type="Script" uid="uid://dt83mh3hbxwe6" path="res://scripts/battle_test.gd" id="1_legaw"]
 [ext_resource type="Script" uid="uid://bhdts0363nnm8" path="res://scripts/battle_manager.gd" id="2_tp7yc"]
 [ext_resource type="Script" uid="uid://b4vfx11poblgj" path="res://scripts/char_data.gd" id="3_smx2l"]
 [ext_resource type="Resource" uid="uid://d27kr4qwd3ng" path="res://ressources/Player Characters/hero.tres" id="4_5txia"]
 [ext_resource type="Resource" uid="uid://dayx4q8vorwm3" path="res://ressources/Enemies/Rentner.tres" id="5_tp7yc"]
+[ext_resource type="Script" uid="uid://c3icaeegf4j34" path="res://scripts/party_hud_container.gd" id="6_smx2l"]
+[ext_resource type="PackedScene" uid="uid://xm18nkpojt6g" path="res://scenes/PartyMemberUI.tscn" id="7_5txia"]
 [ext_resource type="Texture2D" uid="uid://c15f56jyfo8js" path="res://ressources/sprites/fire1.png" id="7_smx2l"]
 
 [sub_resource type="Curve" id="Curve_5txia"]
@@ -69,6 +71,8 @@ text = "Basic Attack"
 [node name="PartyHUDContainer" type="VBoxContainer" parent="DebugUI/CanvasLayer/PartyMenuContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+script = ExtResource("6_smx2l")
+party_member_ui_scene = ExtResource("7_5txia")
 
 [node name="ColorRect" type="ColorRect" parent="DebugUI/CanvasLayer/PartyMenuContainer/PartyHUDContainer"]
 layout_mode = 2

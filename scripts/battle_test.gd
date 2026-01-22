@@ -8,6 +8,7 @@ extends Node
 func _ready() -> void:
 	log_label.text = "Bereit.\n"
 
+
 func _on_start_battle_btn_pressed() -> void:
 	log_label.text += "\n--- Kampf startet ---\n"
 	attack_btn.disabled = false
