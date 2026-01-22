@@ -28,13 +28,13 @@ var state := BattleState.START
 # Functions
 ####################
 func start_battle(): 
-	
+
 	party.clear()
 	enemies.clear()
 	turn_order.clear()
 	for child in spawn_point.get_children():
 		child.queue_free()
-	
+
 	for data in party_data:
 		var bc = BattleCharacter.new()
 		bc.setup(data)
@@ -44,29 +44,29 @@ func start_battle():
 		var bc = BattleCharacter.new()
 		bc.setup(data)
 		enemies.append(bc)
-		
+
 	var count = enemies.size()
 	var spacing = 250.0
-	
+
 	for i in range(count):
 		# Create slot
 		var new_slot = enemy_scene.instantiate()
 		spawn_point.add_child(new_slot)
-		
-		# Dynamic positioning
+
+		# Dynamic positioning of each slot
 		var x_offset = (i - (count - 1) / 2.0) * spacing
 		new_slot.position = Vector2(x_offset, 0)
-		
-		# get sprites from  resource 
+
+		# get sprites from resource 
 		var resource_sprite = enemies[i].data.sprite
 		var sprite_node = new_slot.get_node("Sprite2D")
 		sprite_node.texture = resource_sprite
 		enemies[i].battle_node = new_slot
-		
+
 	calculate_turn_order()
 	current_turn_index = 0
 	refresh_turn_order_ui()
-	
+
 	print("--- Kampf beginnt ---")
 	process_battle_loop()
 
@@ -130,17 +130,17 @@ func next_turn():
 func attack(attacker: BattleCharacter, target: BattleCharacter):
 	var damage = max(attacker.data.atk - target.data.def, 1)
 	target.current_hp -= damage
-	
+
 	if target.battle_node:
 		var tween = create_tween()
 		tween.tween_property(target.battle_node, "modulate", Color.RED, 0.1)
 		tween.tween_property(target.battle_node, "modulate", Color.WHITE, 0.1)
-		var prtcl_pos = target.battle_node.global_position
-		particelSpawner.global_position = prtcl_pos
+		var particel_pos = target.battle_node.global_position
+		particelSpawner.global_position = particel_pos
 		particelSpawner.z_index = 3
 		particelSpawner.restart()
 		spawn_damage_number(target.battle_node.global_position, damage)
-		
+
 	if target.current_hp <= 0:
 		print(target.data.name, " wurde besiegt!")
 		despawn_enemy_visual(target)
@@ -182,7 +182,7 @@ func execute_turn():
 
 	next_turn()
 
-func process_battle_loop(): # prüft ob kampf vorbei ist, führt einen zug aus und ruft sich danach wieder auf # TODO später löschen und durch Turn States ersetzen
+func process_battle_loop():
 	if is_battle_over():
 		return
 
@@ -191,11 +191,6 @@ func process_battle_loop(): # prüft ob kampf vorbei ist, führt einen zug aus u
 ####################
 # Helpers
 ####################
-func print_turn_order(): #TODO delete later
-	print("Turn Order:")
-	for c in turn_order:
-		print(" - ", c.data.name)
-
 func is_player_turn() -> bool:
 	var actor = get_current_actor()
 	return actor.is_player_controlled
@@ -245,24 +240,23 @@ func despawn_enemy_visual(character: BattleCharacter):
 		var tween = create_tween()
 		tween.tween_property(character.battle_node, "modulate:a", 0, 0.5)
 		tween.tween_property(character.battle_node, "scale", Vector2.ZERO, 0.5)
-		
 		tween.finished.connect(func(): character.battle_node.queue_free())
 
 func spawn_damage_number(pos: Vector2, value: int):
 	var dmg_node = damage_popup.instantiate()
 	get_tree().current_scene.add_child(dmg_node)
-	
+
 	# some randomness in spawn logic
 	var random_offset = Vector2(randf_range(-20, 20), randf_range(-10, 10))
 	dmg_node.global_position = pos + random_offset
-	
+
 	# TODO Future crit colors or other colors in case of big dmg
 	var color = Color.WHITE
-	if value > 50: color = Color.YELLOW # example code
-	
+	if value > 50: color = Color.YELLOW #FIXME example code
+
 	dmg_node.setup(value, color)
 
-func end_battle(player_won: bool): #TODO für spätere Turn States..
+func end_battle(player_won: bool):
 	state = BattleState.END
 	if player_won:
 		print(">>> PARTY GEWINNT <<<")

@@ -10,6 +10,7 @@ class_name CharData
 @export var luck: int
 @export var speed: int
 @export var level: int
+@export var xp: int
 @export var portrait: Image
 @export var sprite: Texture2D
 @export var resistances := {
