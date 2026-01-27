@@ -11,19 +11,27 @@
 [ext_resource type="Texture2D" uid="uid://c15f56jyfo8js" path="res://ressources/sprites/fire1.png" id="7_smx2l"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_766wr"]
+content_margin_left = 10.0
+content_margin_top = 10.0
+content_margin_right = 10.0
+content_margin_bottom = 10.0
 bg_color = Color(0.050980393, 0.08627451, 0.14509805, 1)
-border_width_left = 3
-border_width_top = 3
-border_width_right = 3
-border_width_bottom = 3
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
 border_blend = true
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2aica"]
+content_margin_left = 10.0
+content_margin_top = 10.0
+content_margin_right = 10.0
+content_margin_bottom = 10.0
 bg_color = Color(0.050980393, 0.08627451, 0.14509805, 1)
-border_width_left = 3
-border_width_top = 3
-border_width_right = 3
-border_width_bottom = 3
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
 border_blend = true
 
 [sub_resource type="Curve" id="Curve_5txia"]
@@ -69,40 +77,41 @@ offset_top = -177.0
 offset_bottom = 3.0
 grow_horizontal = 2
 grow_vertical = 0
+theme_override_constants/separation = 10
+alignment = 1
 
 [node name="ActionsContainer" type="VBoxContainer" parent="DebugUI/CanvasLayer/PartyMenuContainer"]
 custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 alignment = 1
 
-[node name="ColorRect" type="Panel" parent="DebugUI/CanvasLayer/PartyMenuContainer/ActionsContainer"]
+[node name="ColorRect" type="PanelContainer" parent="DebugUI/CanvasLayer/PartyMenuContainer/ActionsContainer"]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_styles/panel = SubResource("StyleBoxFlat_766wr")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="DebugUI/CanvasLayer/PartyMenuContainer/ActionsContainer/ColorRect"]
-layout_mode = 0
-offset_right = 300.0
-offset_bottom = 180.0
+layout_mode = 2
 theme_override_constants/separation = 8
 alignment = 1
 
 [node name="AttackBtn" type="Button" parent="DebugUI/CanvasLayer/PartyMenuContainer/ActionsContainer/ColorRect/VBoxContainer"]
 layout_mode = 2
-size_flags_vertical = 3
+size_flags_horizontal = 4
 theme_override_font_sizes/font_size = 20
 disabled = true
 text = "Attack"
 
 [node name="GuardBtn" type="Button" parent="DebugUI/CanvasLayer/PartyMenuContainer/ActionsContainer/ColorRect/VBoxContainer"]
 layout_mode = 2
-size_flags_vertical = 3
+size_flags_horizontal = 4
 theme_override_font_sizes/font_size = 20
 disabled = true
 text = "Guard"
 
 [node name="SkillsBtn" type="Button" parent="DebugUI/CanvasLayer/PartyMenuContainer/ActionsContainer/ColorRect/VBoxContainer"]
 layout_mode = 2
+size_flags_horizontal = 4
 size_flags_vertical = 3
 theme_override_font_sizes/font_size = 20
 disabled = true
@@ -110,22 +119,22 @@ text = "Skills"
 
 [node name="ItemBtn" type="Button" parent="DebugUI/CanvasLayer/PartyMenuContainer/ActionsContainer/ColorRect/VBoxContainer"]
 layout_mode = 2
+size_flags_horizontal = 4
 size_flags_vertical = 3
 theme_override_font_sizes/font_size = 20
 disabled = true
 text = "Items"
 
-[node name="ColorRect" type="Panel" parent="DebugUI/CanvasLayer/PartyMenuContainer"]
+[node name="ColorRect" type="PanelContainer" parent="DebugUI/CanvasLayer/PartyMenuContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_styles/panel = SubResource("StyleBoxFlat_2aica")
 
 [node name="PartyHUDContainer" type="VBoxContainer" parent="DebugUI/CanvasLayer/PartyMenuContainer/ColorRect"]
-layout_mode = 0
-offset_right = 844.0
-offset_bottom = 180.0
+layout_mode = 2
 size_flags_horizontal = 3
+theme_override_constants/separation = 8
 script = ExtResource("6_smx2l")
 party_member_ui_scene = ExtResource("7_5txia")
 
