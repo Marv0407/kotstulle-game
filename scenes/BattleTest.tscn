@@ -1,13 +1,30 @@
-[gd_scene load_steps=10 format=3 uid="uid://dcmvwdjbytety"]
+[gd_scene load_steps=13 format=3 uid="uid://dcmvwdjbytety"]
 
 [ext_resource type="Script" uid="uid://dt83mh3hbxwe6" path="res://scripts/battle_test.gd" id="1_legaw"]
 [ext_resource type="Script" uid="uid://bhdts0363nnm8" path="res://scripts/battle_manager.gd" id="2_tp7yc"]
 [ext_resource type="Script" uid="uid://b4vfx11poblgj" path="res://scripts/char_data.gd" id="3_smx2l"]
 [ext_resource type="Resource" uid="uid://d27kr4qwd3ng" path="res://ressources/Player Characters/hero.tres" id="4_5txia"]
-[ext_resource type="Resource" uid="uid://dayx4q8vorwm3" path="res://ressources/Enemies/Rentner.tres" id="5_tp7yc"]
+[ext_resource type="Resource" uid="uid://dayx4q8vorwm3" path="res://ressources/Enemies/Rentner.tres" id="5_766wr"]
+[ext_resource type="Resource" uid="uid://m8blmoddq8s2" path="res://ressources/Enemies/Pommespanzer.tres" id="6_2aica"]
 [ext_resource type="Script" uid="uid://c3icaeegf4j34" path="res://scripts/party_hud_container.gd" id="6_smx2l"]
 [ext_resource type="PackedScene" uid="uid://xm18nkpojt6g" path="res://scenes/PartyMemberUI.tscn" id="7_5txia"]
 [ext_resource type="Texture2D" uid="uid://c15f56jyfo8js" path="res://ressources/sprites/fire1.png" id="7_smx2l"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_766wr"]
+bg_color = Color(0.050980393, 0.08627451, 0.14509805, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_blend = true
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2aica"]
+bg_color = Color(0.050980393, 0.08627451, 0.14509805, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_blend = true
 
 [sub_resource type="Curve" id="Curve_5txia"]
 _limits = [-200.0, 200.0, 0.0, 1.0]
@@ -20,7 +37,7 @@ script = ExtResource("1_legaw")
 [node name="BattleManager" type="Node" parent="." node_paths=PackedStringArray("turn_order_container")]
 script = ExtResource("2_tp7yc")
 party_data = Array[ExtResource("3_smx2l")]([ExtResource("4_5txia")])
-enemy_data = Array[ExtResource("3_smx2l")]([ExtResource("5_tp7yc"), ExtResource("5_tp7yc")])
+enemy_data = Array[ExtResource("3_smx2l")]([ExtResource("5_766wr"), ExtResource("6_2aica")])
 turn_order_container = NodePath("../DebugUI/CanvasLayer/TurnOrderContainer")
 
 [node name="DebugUI" type="Control" parent="."]
@@ -58,26 +75,59 @@ custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 alignment = 1
 
-[node name="ColorRect" type="ColorRect" parent="DebugUI/CanvasLayer/PartyMenuContainer/ActionsContainer"]
+[node name="ColorRect" type="Panel" parent="DebugUI/CanvasLayer/PartyMenuContainer/ActionsContainer"]
 layout_mode = 2
 size_flags_vertical = 3
-color = Color(0.012566125, 0.025639828, 0.0564045, 0.5647059)
+theme_override_styles/panel = SubResource("StyleBoxFlat_766wr")
 
-[node name="BasicAttackBtn" type="Button" parent="DebugUI/CanvasLayer/PartyMenuContainer/ActionsContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="DebugUI/CanvasLayer/PartyMenuContainer/ActionsContainer/ColorRect"]
+layout_mode = 0
+offset_right = 300.0
+offset_bottom = 180.0
+theme_override_constants/separation = 8
+alignment = 1
+
+[node name="AttackBtn" type="Button" parent="DebugUI/CanvasLayer/PartyMenuContainer/ActionsContainer/ColorRect/VBoxContainer"]
 layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 20
 disabled = true
-text = "Basic Attack"
+text = "Attack"
 
-[node name="PartyHUDContainer" type="VBoxContainer" parent="DebugUI/CanvasLayer/PartyMenuContainer"]
+[node name="GuardBtn" type="Button" parent="DebugUI/CanvasLayer/PartyMenuContainer/ActionsContainer/ColorRect/VBoxContainer"]
 layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 20
+disabled = true
+text = "Guard"
+
+[node name="SkillsBtn" type="Button" parent="DebugUI/CanvasLayer/PartyMenuContainer/ActionsContainer/ColorRect/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 20
+disabled = true
+text = "Skills"
+
+[node name="ItemBtn" type="Button" parent="DebugUI/CanvasLayer/PartyMenuContainer/ActionsContainer/ColorRect/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 20
+disabled = true
+text = "Items"
+
+[node name="ColorRect" type="Panel" parent="DebugUI/CanvasLayer/PartyMenuContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_2aica")
+
+[node name="PartyHUDContainer" type="VBoxContainer" parent="DebugUI/CanvasLayer/PartyMenuContainer/ColorRect"]
+layout_mode = 0
+offset_right = 844.0
+offset_bottom = 180.0
 size_flags_horizontal = 3
 script = ExtResource("6_smx2l")
 party_member_ui_scene = ExtResource("7_5txia")
-
-[node name="ColorRect" type="ColorRect" parent="DebugUI/CanvasLayer/PartyMenuContainer/PartyHUDContainer"]
-layout_mode = 2
-size_flags_vertical = 3
-color = Color(0.012566125, 0.025639828, 0.0564045, 0.5647059)
 
 [node name="Background" type="TextureRect" parent="DebugUI"]
 layout_mode = 0
@@ -152,5 +202,5 @@ grow_vertical = 2
 
 [node name="EnemyPartyContainer" type="Node2D" parent="DebugUI/EnemyPositionAnchor"]
 
-[connection signal="pressed" from="DebugUI/CanvasLayer/PartyMenuContainer/ActionsContainer/BasicAttackBtn" to="." method="_on_basic_attack_pressed"]
+[connection signal="pressed" from="DebugUI/CanvasLayer/PartyMenuContainer/ActionsContainer/ColorRect/VBoxContainer/AttackBtn" to="." method="_on_basic_attack_pressed"]
 [connection signal="pressed" from="DebugUI/VBoxContainer/StartBattleBtn" to="." method="_on_start_battle_btn_pressed"]

@@ -2,7 +2,7 @@ extends Node
 
 @onready var battle_manager = $BattleManager
 @onready var log_label = $DebugUI/LogLabel
-@onready var attack_btn = $DebugUI/CanvasLayer/PartyMenuContainer/ActionsContainer/BasicAttackBtn
+@onready var attack_btn = $DebugUI/CanvasLayer/PartyMenuContainer/ActionsContainer/ColorRect/VBoxContainer/AttackBtn
 @onready var start_battle_btn = $DebugUI/VBoxContainer/StartBattleBtn
 
 func _ready() -> void:

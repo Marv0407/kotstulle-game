@@ -23,7 +23,7 @@ enum BattleState { #TODO Turn States später einfügen um Auto Battle abzulösen
 var state := BattleState.START
 @onready var particelSpawner = $"../DebugUI/HBoxContainer/ParticelSpawner"
 @onready var spawn_point = $"../DebugUI/EnemyPositionAnchor/EnemyPartyContainer"
-@onready var party_panel: PartyHUD = $"../DebugUI/CanvasLayer/PartyMenuContainer/PartyHUDContainer"
+@onready var party_panel: PartyHUD = $"../DebugUI/CanvasLayer/PartyMenuContainer/ColorRect/PartyHUDContainer"
 
 ####################
 # Functions

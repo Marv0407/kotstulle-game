@@ -6,13 +6,13 @@
 [resource]
 script = ExtResource("1_jqix2")
 name = "Pommespanzer"
-max_hp = 40
-atk = 8
-def = 4
-sp_atk = 6
+max_hp = 60
+atk = 10
+def = 10
+sp_atk = 2
 sp_def = 2
-luck = 6
-speed = 6
+luck = 5
+speed = 1
 level = 1
 sprite = ExtResource("2_dohw1")
 metadata/_custom_type_script = "uid://b4vfx11poblgj"

@@ -6,13 +6,13 @@
 [resource]
 script = ExtResource("1_8o84g")
 name = "Rentner"
-max_hp = 40
+max_hp = 67
 atk = 8
 def = 4
-sp_atk = 6
+sp_atk = 5
 sp_def = 2
-luck = 6
-speed = 6
+luck = 4
+speed = 4
 level = 1
 sprite = ExtResource("2_812gd")
 metadata/_custom_type_script = "uid://b4vfx11poblgj"
