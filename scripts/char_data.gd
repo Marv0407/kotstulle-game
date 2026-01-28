@@ -19,3 +19,4 @@ class_name CharData
 	"PSYCHIC": 0,
 	#TODO
 }
+@export var skills: Array[SkillData] = []

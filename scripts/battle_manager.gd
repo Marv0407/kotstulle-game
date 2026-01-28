@@ -75,31 +75,38 @@ func start_battle():
 	process_battle_loop()
 
 func process_turn(): 
+	if is_battle_over():
+		return
+	
 	var actor = get_current_actor()
-
+	
 	if not actor.is_alive():
 		next_turn()
-		process_turn()
 		return
-
+	
 	if actor in party:
-		state = BattleState.PLAYER_TURN
-		print("Spieler ist am Zug: ", actor.data.name)
+		start_player_turn(actor)
 	else:
-		state = BattleState.ENEMY_TURN
-		print("Gegner ist am Zug: ", actor.data.name)
-		execute_enemy_turn()
+		start_enemy_turn(actor)
 
-func execute_enemy_turn():
-	var actor = get_current_actor()
-	var targets = get_alive_party()
+func start_player_turn(actor):
+	state = BattleState.PLAYER_TURN
+	print("Player turn: ", actor.data.name)
 
-	if targets.is_empty():
-		end_battle(false)
-		return
+func start_enemy_turn(actor):
+	state = BattleState.ENEMY_TURN
+	print("Enemy turn: ", actor.data.name)
+	# hier später Gegner Skills
+	# var skill = actor.select_ai_skill()
+	execute_skill(actor, actor.data.basic_attack, get_alive_party().pick_random())
 
-	attack(actor, targets.pick_random())
+func execute_skill(user: BattleCharacter, skill: SkillData, target: BattleCharacter):
+	# hier kommt später Targeting-Logik rein (get_targets_dynamic)
+
+	attack(user, target)
+
 	await get_tree().create_timer(0.8).timeout
+
 	next_turn()
 	process_turn()
 
@@ -107,8 +114,8 @@ func calculate_turn_order():
 	turn_order.clear()
 	turn_order.append_array(party)
 	turn_order.append_array(enemies)
-	turn_order.sort_custom(func(a, b):
-		return a.data.speed > b.data.speed
+	turn_order.sort_custom(
+		func(a, b): return a.data.speed > b.data.speed
 		)
 
 func get_current_actor() -> BattleCharacter:
@@ -172,28 +179,6 @@ func debug_player_attack():
 	next_turn()
 	process_turn()
 
-func execute_turn():
-	var actor = get_current_actor()
-
-	if not actor.is_alive():
-		next_turn()
-		return
-	# Ziel bestimmen
-	if actor in party:
-		var targets = get_alive_enemies()
-		if targets.is_empty():
-			end_battle(true)
-			return
-		attack(actor, targets.pick_random())
-	else:
-		var targets = get_alive_party()
-		if targets.is_empty():
-			end_battle(false)
-			return
-		attack(actor, targets.pick_random())
-
-	next_turn()
-
 func process_battle_loop():
 	if is_battle_over():
 		return
@@ -243,9 +228,8 @@ func refresh_turn_order_ui():
 func end_battle(player_won: bool):
 	state = BattleState.END
 	if player_won:
-		print(">>> PARTY GEWINNT <<<")
-	else:
-		print(">>> PARTY VERLIERT <<<")
+		var sum_exp = 0
+		for e in enemies: sum_exp += e.data.xp
 # ---------------
 
 # --- VISUALS ---
