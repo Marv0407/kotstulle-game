@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="SkillData" load_steps=2 format=3 uid="uid://dgidyqwyuvip7"]
+
+[ext_resource type="Script" uid="uid://d0ehdwbbf3lbd" path="res://scripts/SkillData.gd" id="1_wpbxf"]
+
+[resource]
+script = ExtResource("1_wpbxf")
+target_selector = "manual"
+metadata/_custom_type_script = "uid://d0ehdwbbf3lbd"

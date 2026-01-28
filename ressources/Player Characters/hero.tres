@@ -1,15 +1,16 @@
-[gd_resource type="Resource" script_class="CharData" load_steps=2 format=3 uid="uid://d27kr4qwd3ng"]
+[gd_resource type="Resource" script_class="CharData" load_steps=3 format=3 uid="uid://d27kr4qwd3ng"]
 
 [ext_resource type="Script" uid="uid://b4vfx11poblgj" path="res://scripts/char_data.gd" id="1_x38h4"]
+[ext_resource type="Script" uid="uid://d0ehdwbbf3lbd" path="res://scripts/SkillData.gd" id="2_fpjk5"]
 
 [resource]
 script = ExtResource("1_x38h4")
 name = "Hero"
 max_hp = 100
 atk = 15
-def = 5
+def = 10
 sp_atk = 15
-sp_def = 5
+sp_def = 10
 luck = 10
 speed = 10
 level = 1

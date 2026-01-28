@@ -93,20 +93,27 @@ func start_player_turn(actor):
 	state = BattleState.PLAYER_TURN
 	print("Player turn: ", actor.data.name)
 
-func start_enemy_turn(actor):
+func start_enemy_turn(actor: BattleCharacter):
 	state = BattleState.ENEMY_TURN
-	print("Enemy turn: ", actor.data.name)
-	# hier später Gegner Skills
-	# var skill = actor.select_ai_skill()
-	execute_skill(actor, actor.data.basic_attack, get_alive_party().pick_random())
+
+	var selected_skill = actor.data.skills[0] 
+	var config = {"target_pool": "enemies", "state": "alive", "selector": "random", "count": 1}
+	var targets_array = get_targets_dynamic(actor, config)
+
+	if not targets_array.is_empty():
+		var first_target = targets_array[0]
+		execute_skill(actor, selected_skill, first_target)
 
 func execute_skill(user: BattleCharacter, skill: SkillData, target: BattleCharacter):
-	# hier kommt später Targeting-Logik rein (get_targets_dynamic)
+	# 1. Schadensberechnung basierend auf Skill Werten
+	# Formel: (Base Damage + a.atk * scaling) - b.def
+	var scaling_value = user.data.atk # TODO: user.data.get(skill.scaling_stat)
+	var damage = (skill.base_damage + (scaling_value * skill.scaling_factor)) - target.data.def
+	damage = max(1, int(damage))
 
-	attack(user, target)
+	apply_skill_effects(user, target, damage, skill)
 
 	await get_tree().create_timer(0.8).timeout
-
 	next_turn()
 	process_turn()
 
@@ -228,8 +235,8 @@ func refresh_turn_order_ui():
 func end_battle(player_won: bool):
 	state = BattleState.END
 	if player_won:
-		var sum_exp = 0
-		for e in enemies: sum_exp += e.data.xp
+		var _sum_exp = 0
+		for e in enemies: _sum_exp += e.data.xp
 # ---------------
 
 # --- VISUALS ---
@@ -254,6 +261,31 @@ func spawn_damage_number(pos: Vector2, value: int):
 	if value > 50: color = Color.YELLOW #FIXME example code
 
 	dmg_node.setup(value, color)
+
+func apply_skill_effects(attacker: BattleCharacter, target: BattleCharacter, damage: int, skill: SkillData):
+	target.current_hp -= damage
+	print(attacker.data.name, " nutzt ", skill.skill_name, " gegen ", target.data.name, " für ", damage, " Schaden.")
+
+	# UI Update für Party
+	if target in party:
+		for ui in party_panel.get_children():
+			if ui.character == target:
+				ui.update_hp()
+				break
+
+	# Visuals am Ziel
+	if target.battle_node:
+		var tween = create_tween()
+		tween.tween_property(target.battle_node, "modulate", Color.RED, 0.1)
+		tween.tween_property(target.battle_node, "modulate", Color.WHITE, 0.1)
+		
+		# Partikel & Damage Popup
+		particelSpawner.global_position = target.battle_node.global_position
+		particelSpawner.restart()
+		spawn_damage_number(target.battle_node.global_position, damage)
+
+	if target.current_hp <= 0:
+		despawn_enemy_visual(target)
 # ---------------
 
 # --- LOGIC ---

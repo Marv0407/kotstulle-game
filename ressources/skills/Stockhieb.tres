@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="SkillData" load_steps=2 format=3 uid="uid://cvwhn0040wxgy"]
+
+[ext_resource type="Script" uid="uid://d0ehdwbbf3lbd" path="res://scripts/SkillData.gd" id="1_qh10x"]
+
+[resource]
+script = ExtResource("1_qh10x")
+skill_name = "Stockhieb"
+target_selector = "random"
+metadata/_custom_type_script = "uid://d0ehdwbbf3lbd"
