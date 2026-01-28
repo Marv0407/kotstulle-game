@@ -13,7 +13,7 @@ var party: Array[BattleCharacter] = []
 var enemies: Array[BattleCharacter] = []
 var turn_order: Array[BattleCharacter] = []
 var current_turn_index : int
-enum BattleState { #TODO Turn States später einfügen um Auto Battle abzulösen
+enum BattleState { 
 	START,
 	PLAYER_TURN,
 	TARGET_SELECT,
@@ -74,7 +74,7 @@ func start_battle():
 	print("--- Kampf beginnt ---")
 	process_battle_loop()
 
-func process_turn(): #TODO hiermit später durch die states iterieren 
+func process_turn(): 
 	var actor = get_current_actor()
 
 	if not actor.is_alive():
@@ -166,9 +166,9 @@ func debug_player_attack():
 		return
 
 	attack(actor, targets[0])
-	
+
 	await get_tree().create_timer(0.8).timeout
-	
+
 	next_turn()
 	process_turn()
 
@@ -203,6 +203,7 @@ func process_battle_loop():
 ####################
 # Helpers
 ####################
+# --- TURN STATES ---
 func is_player_turn() -> bool:
 	var actor = get_current_actor()
 	return actor.is_player_controlled
@@ -219,15 +220,6 @@ func enter_enemy_turn():
 	attack(enemy, target)
 	next_turn()
 
-func get_alive_party() -> Array[BattleCharacter]:
-	return party.filter(func(c): return c.is_alive())
-
-func get_alive_enemies() -> Array[BattleCharacter]:
-	return enemies.filter(func(c): return c.is_alive())
-
-func is_battle_over() -> bool:
-	return get_alive_party().is_empty() or get_alive_enemies().is_empty()
-
 func refresh_turn_order_ui():
 	if not turn_order_container: return
 
@@ -238,7 +230,9 @@ func refresh_turn_order_ui():
 		var character = turn_order[i]
 		if not character.is_alive(): continue
 		var label := Label.new()
+		var portrait := Image.new()
 		label.text = character.data.name
+		portrait = character.data.portrait
 
 		if i == current_turn_index:
 			label.text = "> " + label.text
@@ -246,6 +240,15 @@ func refresh_turn_order_ui():
 
 		turn_order_container.add_child(label)
 
+func end_battle(player_won: bool):
+	state = BattleState.END
+	if player_won:
+		print(">>> PARTY GEWINNT <<<")
+	else:
+		print(">>> PARTY VERLIERT <<<")
+# ---------------
+
+# --- VISUALS ---
 func despawn_enemy_visual(character: BattleCharacter):
 	if character.battle_node:
 		# TODO insert other/different animations here later
@@ -267,10 +270,48 @@ func spawn_damage_number(pos: Vector2, value: int):
 	if value > 50: color = Color.YELLOW #FIXME example code
 
 	dmg_node.setup(value, color)
+# ---------------
 
-func end_battle(player_won: bool):
-	state = BattleState.END
-	if player_won:
-		print(">>> PARTY GEWINNT <<<")
-	else:
-		print(">>> PARTY VERLIERT <<<")
+# --- LOGIC ---
+func get_targets_dynamic(user: BattleCharacter, config: Dictionary) -> Array[BattleCharacter]:
+	var pool: Array[BattleCharacter] = []
+	
+	# --- 1. POOL (Wer?) ---
+	var is_player = (user in party)
+	match config.get("target_pool", "enemies"):
+		"enemies": pool = enemies if is_player else party
+		"friends": pool = party if is_player else enemies
+		"all": pool = party + enemies
+		"user": return [user]
+
+	# --- 2. STATE (Filter) ---
+	match config.get("state", "alive"):
+		"alive": pool = pool.filter(func(c): return c.is_alive())
+		"dead":  pool = pool.filter(func(c): return not c.is_alive())
+		"any":   pass # Filter überspringen
+
+	# --- 3. SELECTOR (Wie viele und welche?) ---
+	var count = config.get("count", 1)
+	var final_targets: Array[BattleCharacter] = []
+	
+	match config.get("selector", "all"):
+		"all": 
+			final_targets = pool
+		"random":
+			pool.shuffle()
+			final_targets = pool.slice(0, count)
+		"manual":
+			# Hier später UI-Targeting logik
+			pass 
+
+	return final_targets
+
+func get_alive_party() -> Array[BattleCharacter]:
+	return party.filter(func(c): return c.is_alive())
+
+func get_alive_enemies() -> Array[BattleCharacter]:
+	return enemies.filter(func(c): return c.is_alive())
+
+func is_battle_over() -> bool:
+	return get_alive_party().is_empty() or get_alive_enemies().is_empty()
+# ---------------
