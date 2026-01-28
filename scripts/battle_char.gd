@@ -4,6 +4,7 @@ class_name BattleCharacter
 var data: CharData
 var current_hp: int
 var battle_node: Node2D
+var active_effects: Array[StatusEffectData] = []
 
 func _ready() -> void:
 	pass 
@@ -27,3 +28,15 @@ func get_hp() -> int:
 
 func get_lvl() -> int:
 	return data.level
+
+func get_stat(stat_name: String) -> int:
+	var base_value = data.get(stat_name)
+	var multiplier = 1.0
+	
+	for effect in active_effects:
+		if effect.affected_stat == stat_name:
+
+			var effect_strength = (1.0 - effect.stat_modifier) * effect.current_stacks
+			multiplier -= effect_strength
+
+	return int(base_value * max(0.1, multiplier)) # Nicht unter 10% sinken lassen

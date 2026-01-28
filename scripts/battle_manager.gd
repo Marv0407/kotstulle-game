@@ -1,9 +1,7 @@
 extends Node
 class_name  BattleManager
 
-####################
-# Variables
-####################
+#region VARIABLES
 @export var party_data: Array[CharData]
 @export var enemy_data: Array[CharData]
 @export var turn_order_container: HBoxContainer
@@ -24,6 +22,7 @@ var state := BattleState.START
 @onready var particelSpawner = $"../DebugUI/HBoxContainer/ParticelSpawner"
 @onready var spawn_point = $"../DebugUI/EnemyPositionAnchor/EnemyPartyContainer"
 @onready var party_panel: PartyHUD = $"../DebugUI/CanvasLayer/PartyMenuContainer/ColorRect/PartyHUDContainer"
+#endregion
 
 ####################
 # Functions
@@ -75,15 +74,15 @@ func start_battle():
 	process_battle_loop()
 
 func process_turn(): 
+	var actor = get_current_actor()
+	process_status_effects(actor)
 	if is_battle_over():
 		return
-	
-	var actor = get_current_actor()
-	
+
 	if not actor.is_alive():
 		next_turn()
 		return
-	
+
 	if actor in party:
 		start_player_turn(actor)
 	else:
@@ -105,15 +104,18 @@ func start_enemy_turn(actor: BattleCharacter):
 		execute_skill(actor, selected_skill, first_target)
 
 func execute_skill(user: BattleCharacter, skill: SkillData, target: BattleCharacter):
-	# 1. Schadensberechnung basierend auf Skill Werten
-	# Formel: (Base Damage + a.atk * scaling) - b.def
-	var scaling_value = user.data.atk # TODO: user.data.get(skill.scaling_stat)
-	var damage = (skill.base_damage + (scaling_value * skill.scaling_factor)) - target.data.def
-	damage = max(1, int(damage))
 
-	apply_skill_effects(user, target, damage, skill)
+	for i in range(skill.hit_count):
+		var damage = calculate_damage(user, target, skill)
+		apply_skill_effects(user, target, damage, skill)
+		if skill.hit_count > 1:
+			await get_tree().create_timer(skill.delay_between_hits).timeout
+
+	if skill.status_to_apply and randf() * 100 < skill.chance_to_apply:
+		apply_status_effect(target, skill.status_to_apply)
 
 	await get_tree().create_timer(0.8).timeout
+	
 	next_turn()
 	process_turn()
 
@@ -195,7 +197,7 @@ func process_battle_loop():
 ####################
 # Helpers
 ####################
-# --- TURN STATES ---
+#region TURN STATES
 func is_player_turn() -> bool:
 	var actor = get_current_actor()
 	return actor.is_player_controlled
@@ -237,9 +239,9 @@ func end_battle(player_won: bool):
 	if player_won:
 		var _sum_exp = 0
 		for e in enemies: _sum_exp += e.data.xp
-# ---------------
+#endregion
 
-# --- VISUALS ---
+#region VISUALS
 func despawn_enemy_visual(character: BattleCharacter):
 	if character.battle_node:
 		# TODO insert other/different animations here later
@@ -286,9 +288,9 @@ func apply_skill_effects(attacker: BattleCharacter, target: BattleCharacter, dam
 
 	if target.current_hp <= 0:
 		despawn_enemy_visual(target)
-# ---------------
+#endregion
 
-# --- LOGIC ---
+#region LOGIC
 func get_targets_dynamic(user: BattleCharacter, config: Dictionary) -> Array[BattleCharacter]:
 	var pool: Array[BattleCharacter] = []
 	
@@ -322,6 +324,61 @@ func get_targets_dynamic(user: BattleCharacter, config: Dictionary) -> Array[Bat
 
 	return final_targets
 
+func calculate_damage(attacker: BattleCharacter, target: BattleCharacter, skill: SkillData) -> int:
+	var attacker_stat = attacker.data.get(skill.scaling_stat)
+	var raw_damage = skill.base_damage + (attacker_stat * skill.scaling_factor)
+
+	if skill.can_crit:
+		var crit_chance = attacker.data.luck * 0.5 
+		if randf() * 100 < crit_chance:
+			raw_damage *= skill.crit_multiplier
+			print("KRITISCHER TREFFER!") # Später: Signal für gelbe Zahlen
+
+	var defense = target.data.def
+	@warning_ignore("integer_division")
+	var final_damage = int(raw_damage) - (defense / 2)
+
+	if skill.damage_type == "Heal":
+		return -int(raw_damage) 
+
+	return max(1, final_damage) # Mindestens 1 Schaden
+
+func apply_status_effect(target: BattleCharacter, effect_data: StatusEffectData):
+	var existing_effect = null
+	for e in target.active_effects:
+		if e.effect_name == effect_data.effect_name:
+			existing_effect = e
+			break
+
+	if existing_effect:
+		existing_effect.duration = effect_data.duration
+
+		if existing_effect.is_stackable:
+			existing_effect.current_stacks = min(
+				existing_effect.current_stacks + 1, 
+				existing_effect.stack_cap
+			)
+			print(target.data.name, ": ", existing_effect.effect_name, " gestapelt auf ", existing_effect.current_stacks)
+	else:
+		var new_effect = effect_data.duplicate()
+		new_effect.current_stacks = 1
+		target.active_effects.append(new_effect)
+		print(target.data.name, " leidet nun unter: ", new_effect.effect_name)
+	
+	# TODO: kleines Icon über dem Gegner spawnen
+
+func process_status_effects(actor: BattleCharacter):
+	for i in range(actor.active_effects.size() - 1, -1, -1):
+		var effect = actor.active_effects[i]
+
+		if effect.type == "DoT" and effect.damage_per_turn > 0:
+			var total_dot_damage = effect.damage_per_turn * effect.current_stacks
+			apply_skill_effects(null, actor, total_dot_damage, null)
+
+		effect.duration -= 1
+		if effect.duration <= 0:
+			actor.active_effects.remove_at(i)
+
 func get_alive_party() -> Array[BattleCharacter]:
 	return party.filter(func(c): return c.is_alive())
 
@@ -330,4 +387,4 @@ func get_alive_enemies() -> Array[BattleCharacter]:
 
 func is_battle_over() -> bool:
 	return get_alive_party().is_empty() or get_alive_enemies().is_empty()
-# ---------------
+#endregion

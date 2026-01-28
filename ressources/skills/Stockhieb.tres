@@ -6,4 +6,5 @@
 script = ExtResource("1_qh10x")
 skill_name = "Stockhieb"
 target_selector = "random"
+base_damage = 5
 metadata/_custom_type_script = "uid://d0ehdwbbf3lbd"
