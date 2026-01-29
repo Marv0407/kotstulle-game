@@ -23,7 +23,13 @@ var state := BattleState.START
 @onready var spawn_point = $"../DebugUI/EnemyPositionAnchor/EnemyPartyContainer"
 @onready var party_panel: PartyHUD = $"../DebugUI/CanvasLayer/PartyMenuContainer/ColorRect/PartyHUDContainer"
 @onready var log_container = $"../DebugUI/CanvasLayer/PanelContainer/ScrollContainer/LogContainer"
+@onready var skill_menu = $"../DebugUI/CanvasLayer/SkillMenu"
 #endregion
+
+func _ready():
+	skill_menu.skill_selected.connect(_on_skill_chosen)
+	skill_menu.canceled.connect(_on_skill_menu_canceled)
+	skill_menu.hide()
 
 ####################
 # Functions
@@ -304,7 +310,7 @@ func apply_skill_effects(attacker: BattleCharacter, target: BattleCharacter, dam
 		var tween = create_tween()
 		tween.tween_property(target.battle_node, "modulate", Color.RED, 0.1)
 		tween.tween_property(target.battle_node, "modulate", Color.WHITE, 0.1)
-		
+
 		# Partikel & Damage Popup
 		if skill.vfx_scene:
 			var vfx_instance = skill.vfx_scene.instantiate()
@@ -317,6 +323,25 @@ func apply_skill_effects(attacker: BattleCharacter, target: BattleCharacter, dam
 	if target.current_hp <= 0:
 		post_log(target.data.name + " wurde besiegt!", Color.ORANGE_RED)
 		despawn_enemy_visual(target)
+
+func open_skill_menu():
+	var actor = get_current_actor()
+	set_player_ui_enabled(false)
+	skill_menu.setup(actor)
+	skill_menu.show()
+
+func _on_skill_chosen(skill: SkillData):
+	skill_menu.hide()
+	# TODO: hier wieder Targeting System später einbauen
+	execute_skill(get_current_actor(), skill, enemies[0]) 
+
+func _on_skill_menu_canceled():
+	skill_menu.hide()
+	set_player_ui_enabled(true)
+
+func _on_skills_btn_pressed() -> void:
+	open_skill_menu()
+
 #endregion
 
 #region LOGIC

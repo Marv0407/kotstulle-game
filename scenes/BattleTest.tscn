@@ -1,10 +1,11 @@
-[gd_scene load_steps=10 format=3 uid="uid://dcmvwdjbytety"]
+[gd_scene load_steps=11 format=3 uid="uid://dcmvwdjbytety"]
 
 [ext_resource type="Script" uid="uid://dt83mh3hbxwe6" path="res://scripts/battle_test.gd" id="1_legaw"]
 [ext_resource type="Script" uid="uid://bhdts0363nnm8" path="res://scripts/battle_manager.gd" id="2_tp7yc"]
 [ext_resource type="Script" uid="uid://b4vfx11poblgj" path="res://scripts/char_data.gd" id="3_smx2l"]
 [ext_resource type="Resource" uid="uid://d27kr4qwd3ng" path="res://ressources/Player Characters/hero.tres" id="4_5txia"]
 [ext_resource type="Resource" uid="uid://dayx4q8vorwm3" path="res://ressources/Enemies/Rentner.tres" id="5_766wr"]
+[ext_resource type="PackedScene" uid="uid://bfd1a46xdcclj" path="res://scenes/SkillMenu.tscn" id="6_5txia"]
 [ext_resource type="Script" uid="uid://c3icaeegf4j34" path="res://scripts/party_hud_container.gd" id="6_smx2l"]
 [ext_resource type="PackedScene" uid="uid://xm18nkpojt6g" path="res://scenes/PartyMemberUI.tscn" id="7_5txia"]
 
@@ -51,6 +52,9 @@ grow_vertical = 2
 
 [node name="CanvasLayer" type="CanvasLayer" parent="DebugUI"]
 
+[node name="SkillMenu" parent="DebugUI/CanvasLayer" instance=ExtResource("6_5txia")]
+visible = false
+
 [node name="TurnOrderContainer" type="HBoxContainer" parent="DebugUI/CanvasLayer"]
 anchors_preset = 5
 anchor_left = 0.5
@@ -91,24 +95,28 @@ alignment = 1
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_font_sizes/font_size = 20
+disabled = true
 text = " Attack "
 
 [node name="SkillsBtn" type="Button" parent="DebugUI/CanvasLayer/PartyMenuContainer/ActionsContainer/ColorRect/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_font_sizes/font_size = 20
+disabled = true
 text = "Skills"
 
 [node name="GuardBtn" type="Button" parent="DebugUI/CanvasLayer/PartyMenuContainer/ActionsContainer/ColorRect/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_font_sizes/font_size = 20
+disabled = true
 text = "Guard"
 
 [node name="ItemBtn" type="Button" parent="DebugUI/CanvasLayer/PartyMenuContainer/ActionsContainer/ColorRect/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_font_sizes/font_size = 20
+disabled = true
 text = "Items"
 
 [node name="ColorRect" type="PanelContainer" parent="DebugUI/CanvasLayer/PartyMenuContainer"]
@@ -184,4 +192,5 @@ grow_vertical = 2
 [node name="EnemyPartyContainer" type="Node2D" parent="DebugUI/EnemyPositionAnchor"]
 
 [connection signal="pressed" from="DebugUI/CanvasLayer/PartyMenuContainer/ActionsContainer/ColorRect/VBoxContainer/AttackBtn" to="." method="_on_basic_attack_pressed"]
+[connection signal="pressed" from="DebugUI/CanvasLayer/PartyMenuContainer/ActionsContainer/ColorRect/VBoxContainer/SkillsBtn" to="BattleManager" method="_on_skills_btn_pressed"]
 [connection signal="pressed" from="DebugUI/VBoxContainer/StartBattleBtn" to="." method="_on_start_battle_btn_pressed"]
