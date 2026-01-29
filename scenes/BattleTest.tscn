@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://dcmvwdjbytety"]
+[gd_scene load_steps=10 format=3 uid="uid://dcmvwdjbytety"]
 
 [ext_resource type="Script" uid="uid://dt83mh3hbxwe6" path="res://scripts/battle_test.gd" id="1_legaw"]
 [ext_resource type="Script" uid="uid://bhdts0363nnm8" path="res://scripts/battle_manager.gd" id="2_tp7yc"]
@@ -7,7 +7,6 @@
 [ext_resource type="Resource" uid="uid://dayx4q8vorwm3" path="res://ressources/Enemies/Rentner.tres" id="5_766wr"]
 [ext_resource type="Script" uid="uid://c3icaeegf4j34" path="res://scripts/party_hud_container.gd" id="6_smx2l"]
 [ext_resource type="PackedScene" uid="uid://xm18nkpojt6g" path="res://scenes/PartyMemberUI.tscn" id="7_5txia"]
-[ext_resource type="Texture2D" uid="uid://c15f56jyfo8js" path="res://ressources/sprites/fire1.png" id="7_smx2l"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_766wr"]
 content_margin_left = 50.0
@@ -32,11 +31,6 @@ border_width_top = 4
 border_width_right = 4
 border_width_bottom = 4
 border_blend = true
-
-[sub_resource type="Curve" id="Curve_5txia"]
-_limits = [-200.0, 200.0, 0.0, 1.0]
-_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.14534885, 191.01123), 0.0, 0.0, 0, 0, Vector2(0.71511626, 15.730347), 0.0, 0.0, 0, 0]
-point_count = 3
 
 [node name="BattleTest" type="Node"]
 script = ExtResource("1_legaw")
@@ -173,39 +167,6 @@ theme_override_constants/separation = 12
 [node name="StartBattleBtn" type="Button" parent="DebugUI/VBoxContainer"]
 layout_mode = 2
 text = "Start Battle"
-
-[node name="HBoxContainer" type="HBoxContainer" parent="DebugUI"]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -20.0
-offset_top = -20.0
-offset_right = 20.0
-offset_bottom = 20.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="ParticelSpawner" type="CPUParticles2D" parent="DebugUI/HBoxContainer"]
-emitting = false
-amount = 12
-texture = ExtResource("7_smx2l")
-lifetime = 0.2
-one_shot = true
-speed_scale = 0.8
-explosiveness = 0.95
-emission_shape = 1
-emission_sphere_radius = 1.0
-spread = 180.0
-gravity = Vector2(0, 0)
-initial_velocity_min = 5.0
-initial_velocity_max = 10.0
-angular_velocity_min = 5.0
-angular_velocity_max = 10.0
-linear_accel_max = 32.95
-linear_accel_curve = SubResource("Curve_5txia")
 
 [node name="EnemyPositionAnchor" type="Control" parent="DebugUI"]
 layout_mode = 1

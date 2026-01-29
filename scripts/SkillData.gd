@@ -7,6 +7,9 @@ class_name SkillData
 @export var icon: Texture2D
 @export var mp_cost: int = 0
 
+@export_group("Visuals")
+@export var vfx_scene: PackedScene 
+
 @export_group("Targeting")
 @export_enum("enemies", "friends", "all", "user") var target_pool: String = "enemies"
 @export_enum("alive", "dead", "any") var target_state: String = "alive"
