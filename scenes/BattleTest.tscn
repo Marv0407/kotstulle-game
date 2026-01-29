@@ -95,24 +95,28 @@ alignment = 1
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_font_sizes/font_size = 20
+disabled = true
 text = " Attack "
 
 [node name="SkillsBtn" type="Button" parent="DebugUI/CanvasLayer/PartyMenuContainer/ActionsContainer/ColorRect/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_font_sizes/font_size = 20
+disabled = true
 text = "Skills"
 
 [node name="GuardBtn" type="Button" parent="DebugUI/CanvasLayer/PartyMenuContainer/ActionsContainer/ColorRect/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_font_sizes/font_size = 20
+disabled = true
 text = "Guard"
 
 [node name="ItemBtn" type="Button" parent="DebugUI/CanvasLayer/PartyMenuContainer/ActionsContainer/ColorRect/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_font_sizes/font_size = 20
+disabled = true
 text = "Items"
 
 [node name="ColorRect" type="PanelContainer" parent="DebugUI/CanvasLayer/PartyMenuContainer"]
