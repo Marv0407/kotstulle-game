@@ -14,3 +14,7 @@ config/name="KotstulleGame"
 run/main_scene="res://scenes/control.tscn"
 config/features=PackedStringArray("4.5", "Forward Plus")
 config/icon="res://icon.svg"
+
+[autoload]
+
+GameData="*res://scripts/GameData.gd"

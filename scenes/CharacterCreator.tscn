@@ -1,0 +1,33 @@
+[gd_scene load_steps=2 format=3 uid="uid://ctjayfbve77hy"]
+
+[ext_resource type="Script" uid="uid://bu0rvty4a0k12" path="res://scenes/character_creator.gd" id="1_bxgve"]
+
+[node name="CharacterCreator" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_bxgve")
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 0
+offset_right = 500.0
+offset_bottom = 500.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 0
+offset_right = 283.0
+offset_bottom = 70.0
+
+[node name="Label" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+text = "Gib deinen Namen Ein amenakoyum"
+
+[node name="LineEdit" type="LineEdit" parent="VBoxContainer"]
+layout_mode = 2
+placeholder_text = "Wähle deinen Namen"
+alignment = 1
+
+[node name="Button" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "Starten"
+
+[connection signal="pressed" from="VBoxContainer/Button" to="." method="_on_button_pressed"]

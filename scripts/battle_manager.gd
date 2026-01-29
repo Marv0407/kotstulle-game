@@ -36,11 +36,22 @@ func start_battle():
 	for child in spawn_point.get_children():
 		child.queue_free()
 
-	for data in party_data:
+	for i in range(party_data.size()):
+		var data = party_data[i]
+		
+		if i == 0 and GameData.player_name != "":
+			data = data.duplicate()
+			data.name = GameData.player_name
+		
 		var bc = BattleCharacter.new()
 		bc.setup(data)
 		party.append(bc)
-	
+
+	#for data in party_data:
+		#var bc = BattleCharacter.new()
+		#bc.setup(data)
+		#party.append(bc)
+	#
 	party_panel.populate(party)
 	
 	for data in enemy_data:
