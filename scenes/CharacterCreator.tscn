@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://ctjayfbve77hy"]
 
-[ext_resource type="Script" uid="uid://bu0rvty4a0k12" path="res://scenes/character_creator.gd" id="1_bxgve"]
+[ext_resource type="Script" uid="uid://bu0rvty4a0k12" path="res://character_creator.gd" id="1_bxgve"]
 
 [node name="CharacterCreator" type="Control"]
 layout_mode = 3
