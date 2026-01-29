@@ -11,7 +11,8 @@ func setup(actor: BattleCharacter):
 	
 	for skill in actor.data.skills:
 		var btn = Button.new()
-		btn.text = skill.skill_name
+		btn.text = skill.skill_name + " - " + str(skill.mp_cost) + " MP"
+		btn.alignment = HORIZONTAL_ALIGNMENT_LEFT
 		btn.pressed.connect(func(): emit_signal("skill_selected", skill))
 		list.add_child(btn)
 
