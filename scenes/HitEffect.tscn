@@ -1,0 +1,31 @@
+[gd_scene load_steps=4 format=3 uid="uid://gm8oertihbmx"]
+
+[ext_resource type="Texture2D" uid="uid://c15f56jyfo8js" path="res://ressources/sprites/fire1.png" id="1_df7el"]
+[ext_resource type="Script" uid="uid://cviijyugpkfma" path="res://HitEffect.gd" id="2_761mu"]
+
+[sub_resource type="Curve" id="Curve_5txia"]
+_limits = [-200.0, 200.0, 0.0, 1.0]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.14534885, 191.01123), 0.0, 0.0, 0, 0, Vector2(0.71511626, 15.730347), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[node name="CPUParticles2D" type="CPUParticles2D"]
+emitting = false
+amount = 12
+texture = ExtResource("1_df7el")
+lifetime = 0.2
+one_shot = true
+speed_scale = 0.8
+explosiveness = 0.95
+emission_shape = 1
+emission_sphere_radius = 1.0
+spread = 180.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 5.0
+initial_velocity_max = 23.0
+angular_velocity_min = 5.0
+angular_velocity_max = 99.07
+linear_accel_max = 50.95
+linear_accel_curve = SubResource("Curve_5txia")
+scale_amount_min = 3.0
+scale_amount_max = 3.0
+script = ExtResource("2_761mu")

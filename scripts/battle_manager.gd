@@ -19,7 +19,7 @@ enum BattleState {
 	END
 }
 var state := BattleState.START
-@onready var particelSpawner = $"../DebugUI/HBoxContainer/ParticelSpawner"
+
 @onready var spawn_point = $"../DebugUI/EnemyPositionAnchor/EnemyPartyContainer"
 @onready var party_panel: PartyHUD = $"../DebugUI/CanvasLayer/PartyMenuContainer/ColorRect/PartyHUDContainer"
 #endregion
@@ -162,9 +162,9 @@ func attack(attacker: BattleCharacter, target: BattleCharacter):
 		tween.tween_property(target.battle_node, "modulate", Color.RED, 0.1)
 		tween.tween_property(target.battle_node, "modulate", Color.WHITE, 0.1)
 		var particel_pos = target.battle_node.global_position
-		particelSpawner.global_position = particel_pos
-		particelSpawner.z_index = 3
-		particelSpawner.restart()
+		#particelSpawner.global_position = particel_pos
+		#particelSpawner.z_index = 3
+		#particelSpawner.restart()
 		spawn_damage_number(target.battle_node.global_position, damage)
 
 	if target.current_hp <= 0:
@@ -181,12 +181,17 @@ func debug_player_attack():
 		end_battle(true)
 		return
 
-	attack(actor, targets[0])
-
-	await get_tree().create_timer(0.8).timeout
-
-	next_turn()
-	process_turn()
+	var skill_to_use = load("res://ressources/skills/PlayerAttack.tres")
+	
+	if skill_to_use:
+		execute_skill(actor, skill_to_use, targets[0])
+	else:
+		
+		# Fallback
+		attack(actor, targets[0])
+		await get_tree().create_timer(0.8).timeout
+		next_turn()
+		process_turn()
 
 func process_battle_loop():
 	if is_battle_over():
@@ -282,8 +287,12 @@ func apply_skill_effects(attacker: BattleCharacter, target: BattleCharacter, dam
 		tween.tween_property(target.battle_node, "modulate", Color.WHITE, 0.1)
 		
 		# Partikel & Damage Popup
-		particelSpawner.global_position = target.battle_node.global_position
-		particelSpawner.restart()
+		if skill.vfx_scene:
+			var vfx_instance = skill.vfx_scene.instantiate()
+			get_tree().current_scene.add_child(vfx_instance)
+			vfx_instance.global_position = target.battle_node.global_position
+			vfx_instance.emitting = true
+			
 		spawn_damage_number(target.battle_node.global_position, damage)
 
 	if target.current_hp <= 0:
