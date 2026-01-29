@@ -22,6 +22,7 @@ var state := BattleState.START
 @onready var particelSpawner = $"../DebugUI/HBoxContainer/ParticelSpawner"
 @onready var spawn_point = $"../DebugUI/EnemyPositionAnchor/EnemyPartyContainer"
 @onready var party_panel: PartyHUD = $"../DebugUI/CanvasLayer/PartyMenuContainer/ColorRect/PartyHUDContainer"
+@onready var log_container = $"../DebugUI/CanvasLayer/PanelContainer/ScrollContainer/LogContainer"
 #endregion
 
 ####################
@@ -90,11 +91,12 @@ func process_turn():
 
 func start_player_turn(actor):
 	state = BattleState.PLAYER_TURN
+	set_player_ui_enabled(true)
 	print("Player turn: ", actor.data.name)
 
 func start_enemy_turn(actor: BattleCharacter):
 	state = BattleState.ENEMY_TURN
-
+	set_player_ui_enabled(false)
 	var selected_skill = actor.data.skills[0] 
 	var config = {"target_pool": "enemies", "state": "alive", "selector": "random", "count": 1}
 	var targets_array = get_targets_dynamic(actor, config)
@@ -112,7 +114,7 @@ func execute_skill(user: BattleCharacter, skill: SkillData, target: BattleCharac
 			await get_tree().create_timer(skill.delay_between_hits).timeout
 
 	if skill.status_to_apply and randf() * 100 < skill.chance_to_apply:
-		apply_status_effect(target, skill.status_to_apply)
+		apply_status_effect(user, target, skill.status_to_apply)
 
 	await get_tree().create_timer(0.8).timeout
 	
@@ -174,19 +176,14 @@ func attack(attacker: BattleCharacter, target: BattleCharacter):
 func debug_player_attack():
 	if state != BattleState.PLAYER_TURN:
 		return
-
+	
 	var actor = get_current_actor()
 	var targets = get_alive_enemies()
-	if targets.is_empty():
-		end_battle(true)
-		return
-
-	attack(actor, targets[0])
-
-	await get_tree().create_timer(0.8).timeout
-
-	next_turn()
-	process_turn()
+	
+	if not targets.is_empty():
+		state = BattleState.TARGET_SELECT # Sperre setzen
+		var skill = actor.data.skills[0]
+		execute_skill(actor, skill, targets[0])
 
 func process_battle_loop():
 	if is_battle_over():
@@ -198,21 +195,6 @@ func process_battle_loop():
 # Helpers
 ####################
 #region TURN STATES
-func is_player_turn() -> bool:
-	var actor = get_current_actor()
-	return actor.is_player_controlled
-
-func enter_player_turn():
-	state = BattleState.PLAYER_TURN
-	emit_signal("player_turn_started", get_current_actor())
-
-func enter_enemy_turn():
-	state = BattleState.ENEMY_TURN
-
-	var enemy = get_current_actor()
-	var target = get_alive_party()
-	attack(enemy, target)
-	next_turn()
 
 func refresh_turn_order_ui():
 	if not turn_order_container: return
@@ -234,6 +216,13 @@ func refresh_turn_order_ui():
 
 		turn_order_container.add_child(label)
 
+func set_player_ui_enabled(enabled: bool):
+	var action_menu = $"../DebugUI/CanvasLayer/PartyMenuContainer/ActionsContainer/ColorRect/VBoxContainer"
+	
+	for child in action_menu.get_children():
+		if child is Button:
+			child.disabled = !enabled
+
 func end_battle(player_won: bool):
 	state = BattleState.END
 	if player_won:
@@ -249,6 +238,18 @@ func despawn_enemy_visual(character: BattleCharacter):
 		tween.tween_property(character.battle_node, "modulate:a", 0, 0.5)
 		tween.tween_property(character.battle_node, "scale", Vector2.ZERO, 0.5)
 		tween.finished.connect(func(): character.battle_node.queue_free())
+
+func post_log(text: String, color: Color = Color.WHITE):
+	print(text) 
+
+	var label = Label.new()
+	label.text = text
+	label.add_theme_font_size_override("font_size", 12)
+	label.add_theme_color_override("font_color", color)
+	#label.autowrap_mode = TextServer.AUTOWRAP_WORD
+	log_container.add_child(label)
+	await get_tree().process_frame
+	log_container.get_parent().scroll_vertical = log_container.size.y
 
 func spawn_damage_number(pos: Vector2, value: int):
 	var dmg_node = damage_popup.instantiate()
@@ -266,8 +267,11 @@ func spawn_damage_number(pos: Vector2, value: int):
 
 func apply_skill_effects(attacker: BattleCharacter, target: BattleCharacter, damage: int, skill: SkillData):
 	target.current_hp -= damage
-	print(attacker.data.name, " nutzt ", skill.skill_name, " gegen ", target.data.name, " für ", damage, " Schaden.")
-
+	if attacker and skill:
+		post_log(attacker.data.name + " nutzt " + skill.skill_name + " für " + str(damage) + " Schaden.", Color.WHITE)
+	else:
+		post_log(target.data.name + " erleidet " + str(damage) + " Schaden durch Effekt.", Color.LIGHT_CORAL)
+	
 	# UI Update für Party
 	if target in party:
 		for ui in party_panel.get_children():
@@ -287,6 +291,7 @@ func apply_skill_effects(attacker: BattleCharacter, target: BattleCharacter, dam
 		spawn_damage_number(target.battle_node.global_position, damage)
 
 	if target.current_hp <= 0:
+		post_log(target.data.name + " wurde besiegt!", Color.ORANGE_RED)
 		despawn_enemy_visual(target)
 #endregion
 
@@ -294,7 +299,7 @@ func apply_skill_effects(attacker: BattleCharacter, target: BattleCharacter, dam
 func get_targets_dynamic(user: BattleCharacter, config: Dictionary) -> Array[BattleCharacter]:
 	var pool: Array[BattleCharacter] = []
 	
-	# --- 1. POOL (Wer?) ---
+	# --- 1. POOL  ---
 	var is_player = (user in party)
 	match config.get("target_pool", "enemies"):
 		"enemies": pool = enemies if is_player else party
@@ -308,7 +313,7 @@ func get_targets_dynamic(user: BattleCharacter, config: Dictionary) -> Array[Bat
 		"dead":  pool = pool.filter(func(c): return not c.is_alive())
 		"any":   pass # Filter überspringen
 
-	# --- 3. SELECTOR (Wie viele und welche?) ---
+	# --- 3. SELECTOR ---
 	var count = config.get("count", 1)
 	var final_targets: Array[BattleCharacter] = []
 	
@@ -319,7 +324,7 @@ func get_targets_dynamic(user: BattleCharacter, config: Dictionary) -> Array[Bat
 			pool.shuffle()
 			final_targets = pool.slice(0, count)
 		"manual":
-			# Hier später UI-Targeting logik
+			# TODO: hier später UI-Targeting logik
 			pass 
 
 	return final_targets
@@ -332,7 +337,7 @@ func calculate_damage(attacker: BattleCharacter, target: BattleCharacter, skill:
 		var crit_chance = attacker.data.luck * 0.5 
 		if randf() * 100 < crit_chance:
 			raw_damage *= skill.crit_multiplier
-			print("KRITISCHER TREFFER!") # Später: Signal für gelbe Zahlen
+			print("KRITISCHER TREFFER!") # TODO: Signal für gelbe Zahlen im Dmg Popup
 
 	var defense = target.data.def
 	@warning_ignore("integer_division")
@@ -341,9 +346,9 @@ func calculate_damage(attacker: BattleCharacter, target: BattleCharacter, skill:
 	if skill.damage_type == "Heal":
 		return -int(raw_damage) 
 
-	return max(1, final_damage) # Mindestens 1 Schaden
+	return max(1, final_damage)
 
-func apply_status_effect(target: BattleCharacter, effect_data: StatusEffectData):
+func apply_status_effect(attacker: BattleCharacter, target: BattleCharacter, effect_data: StatusEffectData):
 	var existing_effect = null
 	for e in target.active_effects:
 		if e.effect_name == effect_data.effect_name:
@@ -358,12 +363,14 @@ func apply_status_effect(target: BattleCharacter, effect_data: StatusEffectData)
 				existing_effect.current_stacks + 1, 
 				existing_effect.stack_cap
 			)
-			print(target.data.name, ": ", existing_effect.effect_name, " gestapelt auf ", existing_effect.current_stacks)
+			post_log(target.data.name + ": " + effect_data.effect_name + " verlängert.", Color.CYAN)
 	else:
 		var new_effect = effect_data.duplicate()
 		new_effect.current_stacks = 1
+		if new_effect.scaling_stat != "none":
+			new_effect.stored_actor_stat = attacker.data.get(new_effect.scaling_stat)
 		target.active_effects.append(new_effect)
-		print(target.data.name, " leidet nun unter: ", new_effect.effect_name)
+		post_log(target.data.name + " wurde " + effect_data.effect_name + "!", Color.GOLD)
 	
 	# TODO: kleines Icon über dem Gegner spawnen
 
@@ -372,8 +379,9 @@ func process_status_effects(actor: BattleCharacter):
 		var effect = actor.active_effects[i]
 
 		if effect.type == "DoT" and effect.damage_per_turn > 0:
-			var total_dot_damage = effect.damage_per_turn * effect.current_stacks
-			apply_skill_effects(null, actor, total_dot_damage, null)
+			var damage_per_stack = effect.base_dot_damage + (effect.stored_actor_stat * effect.scaling_factor)
+			var total_damage = int(damage_per_stack * effect.current_stacks)
+			apply_skill_effects(null, actor, total_damage, null)
 
 		effect.duration -= 1
 		if effect.duration <= 0:

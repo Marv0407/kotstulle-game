@@ -11,7 +11,7 @@ func _ready() -> void:
 
 func _on_start_battle_btn_pressed() -> void:
 	log_label.text += "\n--- Kampf startet ---\n"
-	attack_btn.disabled = false
+	#attack_btn.disabled = false
 	battle_manager.start_battle()
 	start_battle_btn.hide()
 

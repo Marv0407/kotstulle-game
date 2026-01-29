@@ -97,28 +97,24 @@ alignment = 1
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_font_sizes/font_size = 20
-disabled = true
 text = " Attack "
-
-[node name="GuardBtn" type="Button" parent="DebugUI/CanvasLayer/PartyMenuContainer/ActionsContainer/ColorRect/VBoxContainer"]
-layout_mode = 2
-size_flags_vertical = 3
-theme_override_font_sizes/font_size = 20
-disabled = true
-text = "Guard"
 
 [node name="SkillsBtn" type="Button" parent="DebugUI/CanvasLayer/PartyMenuContainer/ActionsContainer/ColorRect/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_font_sizes/font_size = 20
-disabled = true
 text = "Skills"
+
+[node name="GuardBtn" type="Button" parent="DebugUI/CanvasLayer/PartyMenuContainer/ActionsContainer/ColorRect/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 20
+text = "Guard"
 
 [node name="ItemBtn" type="Button" parent="DebugUI/CanvasLayer/PartyMenuContainer/ActionsContainer/ColorRect/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_font_sizes/font_size = 20
-disabled = true
 text = "Items"
 
 [node name="ColorRect" type="PanelContainer" parent="DebugUI/CanvasLayer/PartyMenuContainer"]
@@ -133,6 +129,25 @@ size_flags_horizontal = 3
 theme_override_constants/separation = 8
 script = ExtResource("6_smx2l")
 party_member_ui_scene = ExtResource("7_5txia")
+
+[node name="PanelContainer" type="PanelContainer" parent="DebugUI/CanvasLayer"]
+custom_minimum_size = Vector2(250, 100)
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -40.0
+offset_bottom = 40.0
+grow_horizontal = 0
+
+[node name="ScrollContainer" type="ScrollContainer" parent="DebugUI/CanvasLayer/PanelContainer"]
+layout_mode = 2
+horizontal_scroll_mode = 0
+
+[node name="LogContainer" type="VBoxContainer" parent="DebugUI/CanvasLayer/PanelContainer/ScrollContainer"]
+custom_minimum_size = Vector2(250, 100)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
 
 [node name="Background" type="TextureRect" parent="DebugUI"]
 layout_mode = 0

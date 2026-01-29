@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="StatusEffectData" load_steps=2 format=3 uid="uid://b2ttvf7o80jdv"]
+
+[ext_resource type="Script" uid="uid://cqls26xrlvum2" path="res://scripts/StatusEffectData.gd" id="1_mwm57"]
+
+[resource]
+script = ExtResource("1_mwm57")
+effect_name = "Unterkühlt"
+type = "Debuff"
+stat_modifier = 0.8
+affected_stat = "speed"
+metadata/_custom_type_script = "uid://cqls26xrlvum2"
