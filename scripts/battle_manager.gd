@@ -93,6 +93,7 @@ func process_turn():
 
 	if not actor.is_alive():
 		next_turn()
+		process_turn()
 		return
 
 	if actor in party:
@@ -200,6 +201,31 @@ func execute_skill_aoe(user: BattleCharacter, skill: SkillData, targets: Array[B
 		else:
 			await get_tree().create_timer(0.2).timeout
 
+	await get_tree().create_timer(0.6).timeout
+	next_turn()
+	process_turn()
+
+func execute_skill_random(user: BattleCharacter, skill: SkillData, targets: Array[BattleCharacter]):
+	state = BattleState.ENEMY_TURN
+	var is_random = (skill.target_selector == "random")
+	
+	for hit in range(skill.hit_count):
+		var current_targets = targets
+		if is_random:
+			var config = {"target_pool": "enemies", "selector": "random", "count": skill.target_count}
+			current_targets = get_targets_dynamic(user, config)
+		for target in current_targets:
+			if target.is_alive():
+				var damage = calculate_damage(user, target, skill)
+				apply_skill_effects(user, target, damage, skill)
+				
+				if hit == skill.hit_count - 1 and skill.status_to_apply:
+					if randf() * 100 < skill.chance_to_apply:
+						apply_status_effect(user, target, skill.status_to_apply)
+		
+		if skill.hit_count > 1:
+			await get_tree().create_timer(skill.delay_between_hits).timeout
+	
 	await get_tree().create_timer(0.6).timeout
 	next_turn()
 	process_turn()
@@ -422,11 +448,19 @@ func open_skill_menu():
 
 func _on_skill_chosen(skill: SkillData):
 	skill_menu.hide()
-	if skill.target_selector == "all":
-		var all_enemies = get_alive_enemies()
-		execute_skill_aoe(get_current_actor(), skill, all_enemies)
-	else:
-		start_target_selection(get_current_actor(), skill)
+	match skill.target_selector:
+		"all":
+			var all_enemies = get_alive_enemies()
+			execute_skill_aoe(get_current_actor(), skill, all_enemies)
+	
+		"random":
+			var config = {"target_pool": "enemies", "selector": "random", "count": skill.target_count}
+			var random_targets = get_targets_dynamic(get_current_actor(), config)
+			if not random_targets.is_empty():
+				execute_skill_random(get_current_actor(), skill, random_targets)
+
+		"manual":
+			start_target_selection(get_current_actor(), skill)
 
 func _on_skill_menu_canceled():
 	skill_menu.hide()
