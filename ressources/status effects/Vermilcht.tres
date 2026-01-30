@@ -4,6 +4,7 @@
 
 [resource]
 script = ExtResource("1_eh1cd")
+effect_name = "Vermilcht"
 is_stackable = true
 stack_cap = 3
 base_dot_damage = 5

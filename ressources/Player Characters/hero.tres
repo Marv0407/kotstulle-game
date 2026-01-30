@@ -1,8 +1,9 @@
-[gd_resource type="Resource" script_class="CharData" load_steps=4 format=3 uid="uid://d27kr4qwd3ng"]
+[gd_resource type="Resource" script_class="CharData" load_steps=5 format=3 uid="uid://d27kr4qwd3ng"]
 
 [ext_resource type="Script" uid="uid://b4vfx11poblgj" path="res://scripts/char_data.gd" id="1_x38h4"]
 [ext_resource type="Script" uid="uid://d0ehdwbbf3lbd" path="res://scripts/SkillData.gd" id="2_fpjk5"]
 [ext_resource type="Resource" uid="uid://dgidyqwyuvip7" path="res://ressources/skills/PlayerAttack.tres" id="3_rkocy"]
+[ext_resource type="Resource" uid="uid://b4whja5r01bmo" path="res://ressources/skills/feature_tester.tres" id="4_lodd5"]
 
 [resource]
 script = ExtResource("1_x38h4")
@@ -15,5 +16,5 @@ sp_def = 15
 luck = 15
 speed = 15
 level = 1
-skills = Array[ExtResource("2_fpjk5")]([ExtResource("3_rkocy")])
+skills = Array[ExtResource("2_fpjk5")]([ExtResource("3_rkocy"), ExtResource("4_lodd5")])
 metadata/_custom_type_script = "uid://b4vfx11poblgj"

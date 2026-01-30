@@ -142,6 +142,26 @@ func execute_skill(user: BattleCharacter, skill: SkillData, target: BattleCharac
 	next_turn()
 	process_turn()
 
+func execute_skill_aoe(user: BattleCharacter, skill: SkillData, targets: Array[BattleCharacter]):
+	for i in range(skill.hit_count):
+		for target in targets:
+			if target.is_alive():
+				var damage = calculate_damage(user, target, skill)
+				apply_skill_effects(user, target, damage, skill)
+
+				if i == skill.hit_count - 1:
+					if skill.status_to_apply and randf() * 100 < skill.chance_to_apply:
+						apply_status_effect(user, target, skill.status_to_apply)
+
+		if skill.hit_count > 1:
+			await get_tree().create_timer(skill.delay_between_hits).timeout
+		else:
+			await get_tree().create_timer(0.2).timeout
+
+	await get_tree().create_timer(0.6).timeout
+	next_turn()
+	process_turn()
+
 func calculate_turn_order():
 	turn_order.clear()
 	turn_order.append_array(party)
@@ -338,7 +358,7 @@ func apply_skill_effects(attacker: BattleCharacter, target: BattleCharacter, dam
 		tween.tween_property(target.battle_node, "modulate", Color.WHITE, 0.1)
 
 		# Partikel & Damage Popup
-		if skill.vfx_scene:
+		if skill != null and skill.vfx_scene:
 			var vfx_instance = skill.vfx_scene.instantiate()
 			get_tree().current_scene.add_child(vfx_instance)
 			vfx_instance.global_position = target.battle_node.global_position
@@ -358,7 +378,11 @@ func open_skill_menu():
 
 func _on_skill_chosen(skill: SkillData):
 	skill_menu.hide()
-	start_target_selection(get_current_actor(), skill)
+	if skill.target_selector == "all":
+		var all_enemies = get_alive_enemies()
+		execute_skill_aoe(get_current_actor(), skill, all_enemies)
+	else:
+		start_target_selection(get_current_actor(), skill)
 
 func _on_skill_menu_canceled():
 	skill_menu.hide()
@@ -471,7 +495,7 @@ func process_status_effects(actor: BattleCharacter):
 	for i in range(actor.active_effects.size() - 1, -1, -1):
 		var effect = actor.active_effects[i]
 
-		if effect.type == "DoT" and effect.damage_per_turn > 0:
+		if effect.type == "DoT" and effect.base_dot_damage > 0:
 			var damage_per_stack = effect.base_dot_damage + (effect.stored_actor_stat * effect.scaling_factor)
 			var total_damage = int(damage_per_stack * effect.current_stacks)
 			apply_skill_effects(null, actor, total_damage, null)

@@ -4,6 +4,7 @@
 
 [resource]
 script = ExtResource("1_ehr85")
+effect_name = "Verbrennung"
 base_dot_damage = 10
 scaling_stat = "sp_atk"
 scaling_factor = 0.5

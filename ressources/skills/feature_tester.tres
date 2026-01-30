@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="SkillData" load_steps=4 format=3 uid="uid://b4whja5r01bmo"]
+
+[ext_resource type="Script" uid="uid://d0ehdwbbf3lbd" path="res://scripts/SkillData.gd" id="1_66ae8"]
+[ext_resource type="Resource" uid="uid://l4ns0lici5sr" path="res://ressources/status effects/Verbrennung.tres" id="2_aairr"]
+[ext_resource type="PackedScene" uid="uid://gm8oertihbmx" path="res://scenes/HitEffect.tscn" id="3_ftqjy"]
+
+[resource]
+script = ExtResource("1_66ae8")
+skill_name = "Test Skill"
+description = "macht alles lol"
+mp_cost = 10
+vfx_scene = ExtResource("3_ftqjy")
+base_damage = 1
+hit_count = 3
+delay_between_hits = 0.2
+status_to_apply = ExtResource("2_aairr")
+metadata/_custom_type_script = "uid://d0ehdwbbf3lbd"
