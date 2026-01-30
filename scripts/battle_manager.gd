@@ -19,6 +19,8 @@ enum BattleState {
 	END
 }
 var state := BattleState.START
+var pending_skill: SkillData
+var pending_user: BattleCharacter
 #@onready var particelSpawner = $"../DebugUI/HBoxContainer/ParticelSpawner"
 @onready var spawn_point = $"../DebugUI/EnemyPositionAnchor/EnemyPartyContainer"
 @onready var party_panel: PartyHUD = $"../DebugUI/CanvasLayer/PartyMenuContainer/ColorRect/PartyHUDContainer"
@@ -74,6 +76,9 @@ func start_battle():
 		var new_slot = enemy_scene.instantiate()
 		spawn_point.add_child(new_slot)
 
+		if new_slot.has_signal("clicked"):
+			new_slot.clicked.connect(_on_target_clicked)
+
 		# Dynamic positioning of each slot
 		var x_offset = (i - (count - 1) / 2.0) * spacing
 		new_slot.position = Vector2(x_offset, 0)
@@ -123,7 +128,6 @@ func start_enemy_turn(actor: BattleCharacter):
 		execute_skill(actor, selected_skill, first_target)
 
 func execute_skill(user: BattleCharacter, skill: SkillData, target: BattleCharacter):
-
 	for i in range(skill.hit_count):
 		var damage = calculate_damage(user, target, skill)
 		apply_skill_effects(user, target, damage, skill)
@@ -198,12 +202,13 @@ func debug_player_attack():
 	var targets = get_alive_enemies()
 	
 	if not targets.is_empty():
-		state = BattleState.TARGET_SELECT # Sperre setzen
-		#var skill = actor.data.skills[0] 
+		state = BattleState.TARGET_SELECT
+
 		var skill = load("res://ressources/skills/PlayerAttack.tres")
 		
 		if skill:
-			execute_skill(actor, skill, targets[0])
+			start_target_selection(get_current_actor(), skill)
+			
 		else:
 			# Fallback
 			attack(actor, targets[0])
@@ -216,6 +221,27 @@ func process_battle_loop():
 		return
 
 	process_turn()
+
+func start_target_selection(user: BattleCharacter, skill: SkillData):
+	state = BattleState.TARGET_SELECT
+	pending_user = user
+	pending_skill = skill
+	highlight_potential_targets(true)
+
+func _on_target_clicked(target_node):
+	if state != BattleState.TARGET_SELECT:
+		return
+	
+	var target_character = null
+	for e in enemies:
+		if e.battle_node == target_node:
+			target_character = e
+			break
+	
+	if target_character and target_character.is_alive():
+		highlight_potential_targets(false)
+		state = BattleState.ENEMY_TURN
+		execute_skill(pending_user, pending_skill, target_character)
 
 ####################
 # Helpers
@@ -332,8 +358,7 @@ func open_skill_menu():
 
 func _on_skill_chosen(skill: SkillData):
 	skill_menu.hide()
-	# TODO: hier wieder Targeting System später einbauen
-	execute_skill(get_current_actor(), skill, enemies[0]) 
+	start_target_selection(get_current_actor(), skill)
 
 func _on_skill_menu_canceled():
 	skill_menu.hide()
@@ -341,6 +366,25 @@ func _on_skill_menu_canceled():
 
 func _on_skills_btn_pressed() -> void:
 	open_skill_menu()
+
+func highlight_potential_targets(active: bool):
+	for e in enemies:
+		if not e.is_alive() or not e.battle_node: continue
+		e.battle_node.is_targetable = active
+		if e.battle_node.has_meta("highlight_tween"):
+			var old_tween = e.battle_node.get_meta("highlight_tween")
+			if old_tween and old_tween.is_valid():
+				old_tween.kill()
+
+		if active:
+			var tween = create_tween().set_loops()
+			tween.tween_property(e.battle_node, "modulate", Color.YELLOW, 0.5)
+			tween.tween_property(e.battle_node, "modulate", Color.WHITE, 0.5)
+
+			e.battle_node.set_meta("highlight_tween", tween)
+		else:
+			e.battle_node.modulate = Color.WHITE 
+			e.battle_node.remove_meta("highlight_tween")
 
 #endregion
 
