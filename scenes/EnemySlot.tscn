@@ -1,6 +1,16 @@
-[gd_scene load_steps=2 format=3 uid="uid://b6c8m41txjvbc"]
+[gd_scene load_steps=7 format=3 uid="uid://b6c8m41txjvbc"]
 
 [ext_resource type="Script" uid="uid://xgurrdfhfk33" path="res://scripts/enemy_slot.gd" id="1_akw8c"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_akw8c"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_loh0k"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_xhmbv"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_hmgub"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_432je"]
 
 [node name="EnemySlot" type="Node2D"]
 script = ExtResource("1_akw8c")
@@ -8,3 +18,28 @@ script = ExtResource("1_akw8c")
 [node name="Sprite2D" type="Sprite2D" parent="."]
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+
+[node name="Button" type="Button" parent="."]
+custom_minimum_size = Vector2(200, 400)
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -4.0
+offset_top = -4.0
+offset_right = 4.0
+offset_bottom = 4.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_styles/normal = SubResource("StyleBoxEmpty_akw8c")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_loh0k")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_xhmbv")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_hmgub")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_432je")
+
+[connection signal="mouse_entered" from="Button" to="." method="_on_button_mouse_entered"]
+[connection signal="mouse_exited" from="Button" to="." method="_on_button_mouse_exited"]
+[connection signal="pressed" from="Button" to="." method="_on_button_pressed"]
