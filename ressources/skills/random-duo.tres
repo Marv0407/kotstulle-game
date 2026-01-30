@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="SkillData" load_steps=3 format=3 uid="uid://dw0u3emqgo6aw"]
+
+[ext_resource type="Script" uid="uid://d0ehdwbbf3lbd" path="res://scripts/SkillData.gd" id="1_7y55p"]
+[ext_resource type="PackedScene" uid="uid://gm8oertihbmx" path="res://scenes/HitEffect.tscn" id="2_2u5q4"]
+
+[resource]
+script = ExtResource("1_7y55p")
+skill_name = "Random Target Duo"
+mp_cost = 10
+vfx_scene = ExtResource("2_2u5q4")
+target_selector = "random"
+base_damage = 1
+scaling_factor = 0.4
+hit_count = 4
+delay_between_hits = 0.3
+metadata/_custom_type_script = "uid://d0ehdwbbf3lbd"
