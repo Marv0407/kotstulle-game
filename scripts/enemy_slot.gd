@@ -9,7 +9,7 @@ func _ready() -> void:
 	var tween = create_tween()
 	scale = Vector2.ZERO
 	tween.tween_property(self, "scale", Vector2(1,1), 0.5).set_trans(Tween.TRANS_ELASTIC).set_ease(Tween.EASE_OUT)
-	tween.finished.connect(self.breathing_effect)
+	tween.tween_callback(self.breathing_effect)
 
 func breathing_effect():
 	var tween = create_tween().set_loops()
