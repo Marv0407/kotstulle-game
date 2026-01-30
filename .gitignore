@@ -18,3 +18,5 @@ mono_crash.*.json
 
 
 ressources/sprites/fire1.png.import
+*.godot
+project.godot
