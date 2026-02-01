@@ -1,5 +1,7 @@
 extends Node2D
 signal clicked(slot)
+signal hovered(slot)
+signal unhovered(slot)
 
 @onready var sprite = $Sprite2D
 @onready var btn = $Button
@@ -25,9 +27,13 @@ func _on_button_pressed() -> void:
 	clicked.emit(self)
 
 func _on_button_mouse_entered() -> void:
-	if sprite.modulate == Color.WHITE and is_targetable:
-		sprite.modulate = Color(1.2, 1.2, 1.2)
+	if is_targetable:
+		hovered.emit(self)
 
 func _on_button_mouse_exited() -> void:
-	if sprite.modulate != Color.YELLOW and is_targetable:
-		sprite.modulate = Color.WHITE
+	if is_targetable:
+		unhovered.emit(self)
+
+func reset_visuals() -> void:
+	is_targetable = false
+	sprite.modulate = Color.WHITE
