@@ -68,6 +68,8 @@ func start_battle():
 
 		if new_slot.has_signal("clicked"):
 			new_slot.clicked.connect(_on_target_clicked)
+			new_slot.hovered.connect(_on_slot_hovered)
+			new_slot.unhovered.connect(_on_slot_unhovered)
 
 		# Dynamic positioning of each slot
 		var x_offset = (i - (count - 1) / 2.0) * spacing
@@ -109,13 +111,17 @@ func start_player_turn(actor):
 func start_enemy_turn(actor: BattleCharacter):
 	state = BattleState.ENEMY_TURN
 	set_player_ui_enabled(false)
+
 	var selected_skill = actor.data.skills[0] 
+
 	var config = {"target_pool": "enemies", "state": "alive", "selector": "random", "count": 1}
 	var targets_array = get_targets_dynamic(actor, config)
 
 	if not targets_array.is_empty():
-		var first_target = targets_array[0]
-		execute_skill(actor, selected_skill, first_target)
+		execute_skill(actor, selected_skill, targets_array)
+	else:
+		next_turn()
+		process_turn()
 
 func next_turn():
 	var checked := 0
@@ -170,30 +176,27 @@ func end_battle(player_won: bool):
 #endregion
 
 #region ATTACK & SKILL LOGIC
-func execute_skill(user: BattleCharacter, skill: SkillData, target: BattleCharacter):
-	for i in range(skill.hit_count):
-		var damage = calculate_damage(user, target, skill)
-		apply_skill_effects(user, target, damage, skill)
-		if skill.hit_count > 1:
-			await get_tree().create_timer(skill.delay_between_hits).timeout
+func execute_skill(user: BattleCharacter, skill: SkillData, initial_targets: Array[BattleCharacter]):
+	state = BattleState.ENEMY_TURN 
 
-	if skill.status_to_apply and randf() * 100 < skill.chance_to_apply:
-		apply_status_effect(user, target, skill.status_to_apply)
+	var is_multi_random = (skill.target_selector == "random")
+	for hit in range(skill.hit_count):
+		var current_targets = initial_targets
+		if is_multi_random:
 
-	await get_tree().create_timer(0.8).timeout
-	
-	next_turn()
-	process_turn()
+			current_targets = get_targets_dynamic(user, {
+				"target_pool": "enemies", 
+				"selector": "random", 
+				"count": skill.target_count
+			})
 
-func execute_skill_aoe(user: BattleCharacter, skill: SkillData, targets: Array[BattleCharacter]):
-	for i in range(skill.hit_count):
-		for target in targets:
+		for target in current_targets:
 			if target.is_alive():
 				var damage = calculate_damage(user, target, skill)
 				apply_skill_effects(user, target, damage, skill)
 
-				if i == skill.hit_count - 1:
-					if skill.status_to_apply and randf() * 100 < skill.chance_to_apply:
+				if hit == skill.hit_count - 1 and skill.status_to_apply:
+					if randf() * 100 < skill.chance_to_apply:
 						apply_status_effect(user, target, skill.status_to_apply)
 
 		if skill.hit_count > 1:
@@ -201,31 +204,6 @@ func execute_skill_aoe(user: BattleCharacter, skill: SkillData, targets: Array[B
 		else:
 			await get_tree().create_timer(0.2).timeout
 
-	await get_tree().create_timer(0.6).timeout
-	next_turn()
-	process_turn()
-
-func execute_skill_random(user: BattleCharacter, skill: SkillData, targets: Array[BattleCharacter]):
-	state = BattleState.ENEMY_TURN
-	var is_random = (skill.target_selector == "random")
-	
-	for hit in range(skill.hit_count):
-		var current_targets = targets
-		if is_random:
-			var config = {"target_pool": "enemies", "selector": "random", "count": skill.target_count}
-			current_targets = get_targets_dynamic(user, config)
-		for target in current_targets:
-			if target.is_alive():
-				var damage = calculate_damage(user, target, skill)
-				apply_skill_effects(user, target, damage, skill)
-				
-				if hit == skill.hit_count - 1 and skill.status_to_apply:
-					if randf() * 100 < skill.chance_to_apply:
-						apply_status_effect(user, target, skill.status_to_apply)
-		
-		if skill.hit_count > 1:
-			await get_tree().create_timer(skill.delay_between_hits).timeout
-	
 	await get_tree().create_timer(0.6).timeout
 	next_turn()
 	process_turn()
@@ -263,62 +241,23 @@ func apply_skill_effects(attacker: BattleCharacter, target: BattleCharacter, dam
 		post_log(target.data.name + " wurde besiegt!", Color.ORANGE_RED)
 		despawn_enemy_visual(target)
 
-func get_current_actor() -> BattleCharacter:
-	return turn_order[current_turn_index]
+func _on_target_clicked(_target_node):
+	if state != BattleState.TARGET_SELECT: return
+	highlight_potential_targets(false)
+	if pending_skill.target_selector == "all":
+		execute_skill(pending_user, pending_skill, get_alive_enemies())
 
-func start_target_selection(user: BattleCharacter, skill: SkillData):
-	state = BattleState.TARGET_SELECT
-	pending_user = user
-	pending_skill = skill
-	highlight_potential_targets(true)
+	elif pending_skill.target_selector == "random":
+		execute_skill(pending_user, pending_skill, []) 
 
-func _on_target_clicked(target_node):
-	if state != BattleState.TARGET_SELECT:
-		return
-	
-	var target_character = null
-	for e in enemies:
-		if e.battle_node == target_node:
-			target_character = e
-			break
-	
-	if target_character and target_character.is_alive():
-		highlight_potential_targets(false)
-		state = BattleState.ENEMY_TURN
-		execute_skill(pending_user, pending_skill, target_character)
-
-func get_targets_dynamic(user: BattleCharacter, config: Dictionary) -> Array[BattleCharacter]:
-	var pool: Array[BattleCharacter] = []
-	
-	# --- 1. POOL  ---
-	var is_player = (user in party)
-	match config.get("target_pool", "enemies"):
-		"enemies": pool = enemies if is_player else party
-		"friends": pool = party if is_player else enemies
-		"all": pool = party + enemies
-		"user": return [user]
-
-	# --- 2. STATE (Filter) ---
-	match config.get("state", "alive"):
-		"alive": pool = pool.filter(func(c): return c.is_alive())
-		"dead":  pool = pool.filter(func(c): return not c.is_alive())
-		"any":   pass # Filter überspringen
-
-	# --- 3. SELECTOR ---
-	var count = config.get("count", 1)
-	var final_targets: Array[BattleCharacter] = []
-	
-	match config.get("selector", "all"):
-		"all": 
-			final_targets = pool
-		"random":
-			pool.shuffle()
-			final_targets = pool.slice(0, count)
-		"manual":
-			# TODO: hier später UI-Targeting logik
-			pass 
-
-	return final_targets
+	else:
+		var target_character = null
+		for e in enemies:
+			if e.battle_node == _target_node:
+				target_character = e
+				break
+		if target_character:
+			execute_skill(pending_user, pending_skill, [target_character])
 
 func calculate_damage(attacker: BattleCharacter, target: BattleCharacter, skill: SkillData) -> int:
 	var attacker_stat = attacker.data.get(skill.scaling_stat)
@@ -388,6 +327,12 @@ func despawn_enemy_visual(character: BattleCharacter):
 		tween.tween_property(character.battle_node, "scale", Vector2.ZERO, 0.5)
 		tween.finished.connect(func(): character.battle_node.queue_free())
 
+func start_target_selection(user: BattleCharacter, skill: SkillData):
+	state = BattleState.TARGET_SELECT
+	pending_user = user
+	pending_skill = skill
+	highlight_potential_targets(true)
+
 func post_log(text: String, color: Color = Color.WHITE):
 	print(text) 
 
@@ -424,21 +369,24 @@ func set_player_ui_enabled(enabled: bool):
 func highlight_potential_targets(active: bool):
 	for e in enemies:
 		if not e.is_alive() or not e.battle_node: continue
-		e.battle_node.is_targetable = active
+
 		if e.battle_node.has_meta("highlight_tween"):
 			var old_tween = e.battle_node.get_meta("highlight_tween")
 			if old_tween and old_tween.is_valid():
 				old_tween.kill()
+			e.battle_node.remove_meta("highlight_tween")
 
 		if active:
+			e.battle_node.is_targetable = true
 			var tween = create_tween().set_loops()
 			tween.tween_property(e.battle_node, "modulate", Color.YELLOW, 0.5)
 			tween.tween_property(e.battle_node, "modulate", Color.WHITE, 0.5)
-
 			e.battle_node.set_meta("highlight_tween", tween)
 		else:
-			e.battle_node.modulate = Color.WHITE 
-			e.battle_node.remove_meta("highlight_tween")
+
+			if e.battle_node.has_method("reset_visuals"):
+				e.battle_node.reset_visuals()
+			e.battle_node.modulate = Color.WHITE
 
 func open_skill_menu():
 	var actor = get_current_actor()
@@ -448,19 +396,21 @@ func open_skill_menu():
 
 func _on_skill_chosen(skill: SkillData):
 	skill_menu.hide()
+	pending_skill = skill
+	pending_user = get_current_actor()
+	state = BattleState.TARGET_SELECT
 	match skill.target_selector:
 		"all":
-			var all_enemies = get_alive_enemies()
-			execute_skill_aoe(get_current_actor(), skill, all_enemies)
-	
+			highlight_potential_targets(true)
+			post_log("Ziel: Alle Gegner", Color.LIGHT_CYAN)
+
 		"random":
-			var config = {"target_pool": "enemies", "selector": "random", "count": skill.target_count}
-			var random_targets = get_targets_dynamic(get_current_actor(), config)
-			if not random_targets.is_empty():
-				execute_skill_random(get_current_actor(), skill, random_targets)
+			highlight_potential_targets(true)
+			post_log("Ziel: Zufällig", Color.LIGHT_CYAN)
 
 		"manual":
-			start_target_selection(get_current_actor(), skill)
+			post_log("Ziel wählen...", Color.LIGHT_CYAN)
+			highlight_potential_targets(true)
 
 func _on_skill_menu_canceled():
 	skill_menu.hide()
@@ -479,4 +429,71 @@ func get_alive_enemies() -> Array[BattleCharacter]:
 
 func is_battle_over() -> bool:
 	return get_alive_party().is_empty() or get_alive_enemies().is_empty()
-#endregion
+
+func get_current_actor() -> BattleCharacter:
+	return turn_order[current_turn_index]
+
+func get_targets_dynamic(user: BattleCharacter, config: Dictionary) -> Array[BattleCharacter]:
+	var pool: Array[BattleCharacter] = []
+	
+	# --- 1. POOL  ---
+	var is_player = (user in party)
+	match config.get("target_pool", "enemies"):
+		"enemies": pool = enemies if is_player else party
+		"friends": pool = party if is_player else enemies
+		"all": pool = party + enemies
+		"user": return [user]
+
+	# --- 2. STATE (Filter) ---
+	match config.get("state", "alive"):
+		"alive": pool = pool.filter(func(c): return c.is_alive())
+		"dead":  pool = pool.filter(func(c): return not c.is_alive())
+		"any":   pass # Filter überspringen
+
+	# --- 3. SELECTOR ---
+	var count = config.get("count", 1)
+	var final_targets: Array[BattleCharacter] = []
+	
+	match config.get("selector", "all"):
+		"all": 
+			final_targets = pool
+		"random":
+			pool.shuffle()
+			final_targets = pool.slice(0, count)
+		"manual":
+			final_targets = pool
+			pass 
+
+	return final_targets
+
+func _process(_delta):
+	if state == BattleState.TARGET_SELECT:
+		if Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT):
+			cancel_target_selection()
+			post_log("Zielauswahl abgebrochen...")
+
+func cancel_target_selection():
+	highlight_potential_targets(false)
+	state = BattleState.PLAYER_TURN
+	set_player_ui_enabled(true)
+
+func _on_slot_hovered(hovered_slot):
+	if state != BattleState.TARGET_SELECT or not pending_skill: return
+
+	match pending_skill.target_selector:
+		"all", "random":
+			for e in enemies:
+				if e.is_alive() and e.battle_node:
+					e.battle_node.get_node("Sprite2D").modulate = Color(1.3, 1.3, 1.3)
+
+		"manual":
+			if hovered_slot and hovered_slot.has_node("Sprite2D"):
+				hovered_slot.get_node("Sprite2D").modulate = Color(1.3, 1.3, 1.3)
+
+func _on_slot_unhovered(_slot):
+	if state == BattleState.TARGET_SELECT:
+		for e in enemies:
+			if e.is_alive() and e.battle_node:
+				e.battle_node.get_node("Sprite2D").modulate = Color.WHITE
+
+	#endregion
