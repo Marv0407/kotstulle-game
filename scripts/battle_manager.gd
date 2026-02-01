@@ -21,6 +21,7 @@ enum BattleState {
 var state := BattleState.START
 var pending_skill: SkillData
 var pending_user: BattleCharacter
+var focused_target_index: int = 0
 
 @onready var spawn_point = $"../DebugUI/EnemyPositionAnchor/EnemyPartyContainer"
 @onready var party_panel: PartyHUD = $"../DebugUI/CanvasLayer/PartyMenuContainer/ColorRect/PartyHUDContainer"
@@ -205,6 +206,8 @@ func execute_skill(user: BattleCharacter, skill: SkillData, initial_targets: Arr
 			await get_tree().create_timer(0.2).timeout
 
 	await get_tree().create_timer(0.6).timeout
+	var focus_owner = get_viewport().gui_get_focus_owner()
+	if focus_owner: focus_owner.release_focus()
 	next_turn()
 	process_turn()
 
@@ -246,10 +249,8 @@ func _on_target_clicked(_target_node):
 	highlight_potential_targets(false)
 	if pending_skill.target_selector == "all":
 		execute_skill(pending_user, pending_skill, get_alive_enemies())
-
 	elif pending_skill.target_selector == "random":
-		execute_skill(pending_user, pending_skill, []) 
-
+		execute_skill(pending_user, pending_skill, [])
 	else:
 		var target_character = null
 		for e in enemies:
@@ -267,7 +268,7 @@ func calculate_damage(attacker: BattleCharacter, target: BattleCharacter, skill:
 		var crit_chance = attacker.data.luck * 0.5 
 		if randf() * 100 < crit_chance:
 			raw_damage *= skill.crit_multiplier
-			print("KRITISCHER TREFFER!") # TODO: Signal für gelbe Zahlen im Dmg Popup
+			post_log("KRITISCHER TREFFER!", Color.YELLOW)
 
 	var defense = target.data.def
 	@warning_ignore("integer_division")
@@ -328,10 +329,15 @@ func despawn_enemy_visual(character: BattleCharacter):
 		tween.finished.connect(func(): character.battle_node.queue_free())
 
 func start_target_selection(user: BattleCharacter, skill: SkillData):
+	set_player_ui_enabled(false)
 	state = BattleState.TARGET_SELECT
 	pending_user = user
 	pending_skill = skill
+	focused_target_index = 0
 	highlight_potential_targets(true)
+	var alive_enemies = get_alive_enemies()
+	if not alive_enemies.is_empty():
+		_on_slot_hovered(alive_enemies[0].battle_node)
 
 func post_log(text: String, color: Color = Color.WHITE):
 	print(text) 
@@ -361,14 +367,18 @@ func spawn_damage_number(pos: Vector2, value: int):
 
 func set_player_ui_enabled(enabled: bool):
 	var action_menu = $"../DebugUI/CanvasLayer/PartyMenuContainer/ActionsContainer/ColorRect/VBoxContainer"
-	
+	var first_button : Button = null
 	for child in action_menu.get_children():
 		if child is Button:
 			child.disabled = !enabled
+			if enabled and first_button == null:
+				first_button = child
+	if enabled and first_button:
+		first_button.grab_focus()
 
 func highlight_potential_targets(active: bool):
 	for e in enemies:
-		if not e.is_alive() or not e.battle_node: continue
+		if not e.battle_node: continue
 
 		if e.battle_node.has_meta("highlight_tween"):
 			var old_tween = e.battle_node.get_meta("highlight_tween")
@@ -376,41 +386,39 @@ func highlight_potential_targets(active: bool):
 				old_tween.kill()
 			e.battle_node.remove_meta("highlight_tween")
 
-		if active:
+		e.battle_node.modulate = Color.WHITE
+		e.battle_node.get_node("Sprite2D").modulate = Color.WHITE
+		
+		if e.battle_node.has_method("reset_visuals"):
+			e.battle_node.reset_visuals()
+
+		if active and e.is_alive():
 			e.battle_node.is_targetable = true
 			var tween = create_tween().set_loops()
 			tween.tween_property(e.battle_node, "modulate", Color.YELLOW, 0.5)
 			tween.tween_property(e.battle_node, "modulate", Color.WHITE, 0.5)
 			e.battle_node.set_meta("highlight_tween", tween)
 		else:
-
-			if e.battle_node.has_method("reset_visuals"):
-				e.battle_node.reset_visuals()
-			e.battle_node.modulate = Color.WHITE
+			e.battle_node.is_targetable = false
 
 func open_skill_menu():
 	var actor = get_current_actor()
+	var current_focus = get_viewport().gui_get_focus_owner()
+	if current_focus:
+		current_focus.release_focus()
 	set_player_ui_enabled(false)
 	skill_menu.setup(actor)
 	skill_menu.show()
+	await get_tree().process_frame
+	await get_tree().process_frame
+	skill_menu.focus_first_button()
 
 func _on_skill_chosen(skill: SkillData):
 	skill_menu.hide()
-	pending_skill = skill
-	pending_user = get_current_actor()
-	state = BattleState.TARGET_SELECT
-	match skill.target_selector:
-		"all":
-			highlight_potential_targets(true)
-			post_log("Ziel: Alle Gegner", Color.LIGHT_CYAN)
-
-		"random":
-			highlight_potential_targets(true)
-			post_log("Ziel: Zufällig", Color.LIGHT_CYAN)
-
-		"manual":
-			post_log("Ziel wählen...", Color.LIGHT_CYAN)
-			highlight_potential_targets(true)
+	start_target_selection(get_current_actor(), skill)
+	if skill.target_selector == "all": post_log("Ziel: Alle Gegner", Color.LIGHT_CYAN)
+	elif skill.target_selector == "random": post_log("Ziel: Zufällig", Color.LIGHT_CYAN)
+	else: post_log("Ziel wählen...", Color.LIGHT_CYAN)
 
 func _on_skill_menu_canceled():
 	skill_menu.hide()
@@ -484,16 +492,51 @@ func _on_slot_hovered(hovered_slot):
 		"all", "random":
 			for e in enemies:
 				if e.is_alive() and e.battle_node:
-					e.battle_node.get_node("Sprite2D").modulate = Color(1.3, 1.3, 1.3)
+					e.battle_node.get_node("Sprite2D").modulate = Color(1.5, 1.5, 1.5)
 
 		"manual":
+			for e in enemies:
+				if e.is_alive() and e.battle_node:
+					e.battle_node.get_node("Sprite2D").modulate = Color.WHITE
 			if hovered_slot and hovered_slot.has_node("Sprite2D"):
-				hovered_slot.get_node("Sprite2D").modulate = Color(1.3, 1.3, 1.3)
+				hovered_slot.get_node("Sprite2D").modulate = Color(1.5, 1.5, 1.5)
 
 func _on_slot_unhovered(_slot):
 	if state == BattleState.TARGET_SELECT:
 		for e in enemies:
 			if e.is_alive() and e.battle_node:
 				e.battle_node.get_node("Sprite2D").modulate = Color.WHITE
+
+func _unhandled_input(event):
+	if state != BattleState.TARGET_SELECT: return
+
+	if event.is_action_pressed("ui_cancel"):
+		cancel_target_selection()
+		return
+
+	if event.is_action_pressed("ui_right"):
+		change_target_focus(1)
+	elif event.is_action_pressed("ui_left"):
+		change_target_focus(-1)
+
+	if event.is_action_pressed("ui_accept"):
+		var alive_enemies = get_alive_enemies()
+		if not alive_enemies.is_empty():
+			var target_char = alive_enemies[focused_target_index]
+			highlight_potential_targets(false)
+			_on_target_clicked(target_char.battle_node)
+
+func change_target_focus(direction: int):
+	var alive_enemies = get_alive_enemies()
+	if alive_enemies.is_empty(): return
+	
+	_on_slot_unhovered(null)
+	
+	focused_target_index += direction
+	if focused_target_index >= alive_enemies.size(): focused_target_index = 0
+	if focused_target_index < 0: focused_target_index = alive_enemies.size() - 1
+
+	var new_target_node = alive_enemies[focused_target_index].battle_node
+	_on_slot_hovered(new_target_node)
 
 	#endregion

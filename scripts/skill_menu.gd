@@ -16,5 +16,17 @@ func setup(actor: BattleCharacter):
 		btn.pressed.connect(func(): emit_signal("skill_selected", skill))
 		list.add_child(btn)
 
+func _unhandled_input(event):
+	if not visible: return
+	if event.is_action_pressed("ui_cancel"):
+		close_menu()
+
 func _on_back_btn_pressed() -> void:
+	close_menu()
+
+func focus_first_button():
+	if list.get_child_count() > 0:
+		list.get_child(0).grab_focus()
+
+func close_menu():
 	canceled.emit()
