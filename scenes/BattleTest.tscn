@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://dcmvwdjbytety"]
+[gd_scene load_steps=14 format=3 uid="uid://dcmvwdjbytety"]
 
 [ext_resource type="Script" uid="uid://dt83mh3hbxwe6" path="res://scripts/battle_test.gd" id="1_legaw"]
 [ext_resource type="Script" uid="uid://bhdts0363nnm8" path="res://scripts/battle_manager.gd" id="2_tp7yc"]
@@ -7,7 +7,10 @@
 [ext_resource type="Resource" uid="uid://dayx4q8vorwm3" path="res://ressources/Enemies/Rentner.tres" id="5_766wr"]
 [ext_resource type="PackedScene" uid="uid://bfd1a46xdcclj" path="res://scenes/SkillMenu.tscn" id="6_5txia"]
 [ext_resource type="Script" uid="uid://c3icaeegf4j34" path="res://scripts/party_hud_container.gd" id="6_smx2l"]
+[ext_resource type="AudioStream" uid="uid://c5diteywikmei" path="res://assets/sfx/Cursor1.ogg" id="6_uvxp4"]
 [ext_resource type="PackedScene" uid="uid://xm18nkpojt6g" path="res://scenes/PartyMemberUI.tscn" id="7_5txia"]
+[ext_resource type="AudioStream" uid="uid://cekq40dgq7o5x" path="res://assets/sfx/Cursor2.ogg" id="7_qwg2f"]
+[ext_resource type="AudioStream" uid="uid://bfjcqu4y0tmor" path="res://assets/sfx/Cancel1.ogg" id="8_hlv3w"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_766wr"]
 content_margin_left = 50.0
@@ -41,6 +44,12 @@ script = ExtResource("2_tp7yc")
 party_data = Array[ExtResource("3_smx2l")]([ExtResource("4_5txia")])
 enemy_data = Array[ExtResource("3_smx2l")]([ExtResource("5_766wr"), ExtResource("5_766wr")])
 turn_order_container = NodePath("../DebugUI/CanvasLayer/TurnOrderContainer")
+sound_focus = ExtResource("6_uvxp4")
+sound_select = ExtResource("7_qwg2f")
+sound_cancel = ExtResource("8_hlv3w")
+
+[node name="SFXPlayer" type="AudioStreamPlayer" parent="BattleManager"]
+volume_db = -16.0
 
 [node name="DebugUI" type="Control" parent="."]
 layout_mode = 3

@@ -7,6 +7,10 @@ class_name  BattleManager
 @export var turn_order_container: HBoxContainer
 @export var enemy_scene: PackedScene = preload("res://scenes/EnemySlot.tscn")
 @export var damage_popup: PackedScene = preload("res://scenes/DamagePopup.tscn")
+@export_group("Audio")
+@export var sound_focus: AudioStream     
+@export var sound_select: AudioStream    
+@export var sound_cancel: AudioStream    
 var party: Array[BattleCharacter] = []
 var enemies: Array[BattleCharacter] = []
 var turn_order: Array[BattleCharacter] = []
@@ -27,13 +31,19 @@ var focused_target_index: int = 0
 @onready var party_panel: PartyHUD = $"../DebugUI/CanvasLayer/PartyMenuContainer/ColorRect/PartyHUDContainer"
 @onready var log_container = $"../DebugUI/CanvasLayer/PanelContainer/ScrollContainer/LogContainer"
 @onready var skill_menu = $"../DebugUI/CanvasLayer/SkillMenu"
+@onready var sfx_player: AudioStreamPlayer = $SFXPlayer
+@onready var action_menu = $"../DebugUI/CanvasLayer/PartyMenuContainer/ActionsContainer/ColorRect/VBoxContainer"
+
+
 #endregion
 
 # --- SETUP ---
 func _ready():
 	skill_menu.skill_selected.connect(_on_skill_chosen)
 	skill_menu.canceled.connect(_on_skill_menu_canceled)
+	skill_menu.request_sound.connect(_on_skill_menu_sound_requested)
 	skill_menu.hide()
+	setup_button_sounds(action_menu)
 
 func start_battle(): 
 	party.clear(); enemies.clear(); turn_order.clear()
@@ -246,6 +256,7 @@ func apply_skill_effects(attacker: BattleCharacter, target: BattleCharacter, dam
 
 func _on_target_clicked(_target_node):
 	if state != BattleState.TARGET_SELECT: return
+	play_sfx(sound_select)
 	highlight_potential_targets(false)
 	if pending_skill.target_selector == "all":
 		execute_skill(pending_user, pending_skill, get_alive_enemies())
@@ -331,6 +342,7 @@ func despawn_enemy_visual(character: BattleCharacter):
 func start_target_selection(user: BattleCharacter, skill: SkillData):
 	set_player_ui_enabled(false)
 	state = BattleState.TARGET_SELECT
+	play_sfx(sound_focus)
 	pending_user = user
 	pending_skill = skill
 	focused_target_index = 0
@@ -366,7 +378,6 @@ func spawn_damage_number(pos: Vector2, value: int):
 	dmg_node.setup(value, color)
 
 func set_player_ui_enabled(enabled: bool):
-	var action_menu = $"../DebugUI/CanvasLayer/PartyMenuContainer/ActionsContainer/ColorRect/VBoxContainer"
 	var first_button : Button = null
 	for child in action_menu.get_children():
 		if child is Button:
@@ -415,12 +426,14 @@ func open_skill_menu():
 
 func _on_skill_chosen(skill: SkillData):
 	skill_menu.hide()
+	play_sfx(sound_select)
 	start_target_selection(get_current_actor(), skill)
 	if skill.target_selector == "all": post_log("Ziel: Alle Gegner", Color.LIGHT_CYAN)
 	elif skill.target_selector == "random": post_log("Ziel: Zufällig", Color.LIGHT_CYAN)
 	else: post_log("Ziel wählen...", Color.LIGHT_CYAN)
 
 func _on_skill_menu_canceled():
+	play_sfx(sound_cancel)
 	skill_menu.hide()
 	set_player_ui_enabled(true)
 
@@ -483,11 +496,12 @@ func _process(_delta):
 func cancel_target_selection():
 	highlight_potential_targets(false)
 	state = BattleState.PLAYER_TURN
+	play_sfx(sound_cancel)
 	set_player_ui_enabled(true)
 
 func _on_slot_hovered(hovered_slot):
 	if state != BattleState.TARGET_SELECT or not pending_skill: return
-
+	play_sfx(sound_focus)
 	match pending_skill.target_selector:
 		"all", "random":
 			for e in enemies:
@@ -538,5 +552,26 @@ func change_target_focus(direction: int):
 
 	var new_target_node = alive_enemies[focused_target_index].battle_node
 	_on_slot_hovered(new_target_node)
+
+func play_sfx(stream: AudioStream):
+	if stream:
+		sfx_player.stream = stream
+		sfx_player.play()
+
+func setup_button_sounds(container: Node):
+	for child in container.get_children():
+		if child is Button:
+			if not child.focus_entered.is_connected(play_sfx):
+				child.focus_entered.connect(play_sfx.bind(sound_focus))
+				child.mouse_entered.connect(play_sfx.bind(sound_focus))
+			if not child.pressed.is_connected(play_sfx):
+				child.pressed.connect(play_sfx.bind(sound_select))
+
+func _on_skill_menu_sound_requested(type: String):
+	match type:
+		"focus":
+			play_sfx(sound_focus)
+		"select":
+			play_sfx(sound_select)
 
 	#endregion
