@@ -2,6 +2,7 @@ extends PanelContainer
 
 signal skill_selected(skill: SkillData)
 signal canceled
+signal request_sound(type: String)
 
 @onready var list = $ScrollContainer/VBoxContainer
 
@@ -13,6 +14,9 @@ func setup(actor: BattleCharacter):
 		var btn = Button.new()
 		btn.text = skill.skill_name + " - " + str(skill.mp_cost) + " MP"
 		btn.alignment = HORIZONTAL_ALIGNMENT_LEFT
+		btn.focus_entered.connect(_on_button_focused)
+		btn.mouse_entered.connect(_on_button_focused)
+		btn.pressed.connect(_on_button_pressed)
 		btn.pressed.connect(func(): emit_signal("skill_selected", skill))
 		list.add_child(btn)
 
@@ -30,3 +34,9 @@ func focus_first_button():
 
 func close_menu():
 	canceled.emit()
+
+func _on_button_focused():
+	request_sound.emit("focus")
+
+func _on_button_pressed():
+	request_sound.emit("select")
