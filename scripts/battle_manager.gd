@@ -7,10 +7,12 @@ class_name  BattleManager
 @export var turn_order_container: HBoxContainer
 @export var enemy_scene: PackedScene = preload("res://scenes/EnemySlot.tscn")
 @export var damage_popup: PackedScene = preload("res://scenes/DamagePopup.tscn")
+@export var turn_order_slot_scene: PackedScene
 @export_group("Audio")
 @export var sound_focus: AudioStream     
 @export var sound_select: AudioStream    
 @export var sound_cancel: AudioStream    
+
 var party: Array[BattleCharacter] = []
 var enemies: Array[BattleCharacter] = []
 var turn_order: Array[BattleCharacter] = []
@@ -153,23 +155,16 @@ func next_turn():
 
 func refresh_turn_order_ui():
 	if not turn_order_container: return
-
 	for child in turn_order_container.get_children():
 		child.queue_free()
 
 	for i in range(turn_order.size()):
-		var character = turn_order[i]
-		if not character.is_alive(): continue
-		var label := Label.new()
-		var portrait := Image.new()
-		label.text = character.data.name
-		portrait = character.data.portrait
+		var c = turn_order[i]
+		if not c.is_alive(): continue
 
-		if i == current_turn_index:
-			label.text = "> " + label.text
-			label.add_theme_color_override("font_color", Color.YELLOW)
-
-		turn_order_container.add_child(label)
+		var slot = turn_order_slot_scene.instantiate()
+		turn_order_container.add_child(slot)
+		slot.setup(c, i == current_turn_index)
 
 func calculate_turn_order():
 	turn_order.clear()
@@ -222,6 +217,7 @@ func execute_skill(user: BattleCharacter, skill: SkillData, initial_targets: Arr
 	process_turn()
 
 func apply_skill_effects(attacker: BattleCharacter, target: BattleCharacter, damage: int, skill: SkillData):
+	var old_hp = target.get_hp()
 	target.current_hp -= damage
 	if attacker and skill:
 		post_log(attacker.data.name + " nutzt " + skill.skill_name + " für " + str(damage) + " Schaden.", Color.WHITE)
@@ -232,7 +228,7 @@ func apply_skill_effects(attacker: BattleCharacter, target: BattleCharacter, dam
 	if target in party:
 		for ui in party_panel.get_children():
 			if ui.character == target:
-				ui.update_hp()
+				ui.update_hp(old_hp)
 				break
 
 	# Visuals am Ziel

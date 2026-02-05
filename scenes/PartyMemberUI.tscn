@@ -15,6 +15,13 @@ script = ExtResource("1_2ed12")
 custom_minimum_size = Vector2(180, 0)
 layout_mode = 2
 
+[node name="HighlightRect" type="ColorRect" parent="NameLbl"]
+visible = false
+layout_mode = 0
+offset_right = 180.0
+offset_bottom = 25.0
+color = Color(1, 1, 1, 0.14901961)
+
 [node name="HPBar" type="ProgressBar" parent="."]
 custom_minimum_size = Vector2(360, 25)
 layout_mode = 2

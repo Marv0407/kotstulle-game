@@ -1,0 +1,35 @@
+[gd_scene load_steps=3 format=3 uid="uid://bwn28x2ikg5jb"]
+
+[ext_resource type="Script" uid="uid://ccojbuuocgfxl" path="res://scripts/turn_order_slot.gd" id="1_y1c0c"]
+[ext_resource type="Texture2D" uid="uid://cjuow10f4esaj" path="res://assets/frame/frame.png" id="2_s2a4x"]
+
+[node name="TurnOrderSlot" type="Control"]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 3
+anchors_preset = 0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1_y1c0c")
+
+[node name="Portrait" type="TextureRect" parent="."]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+expand_mode = 4
+stretch_mode = 5
+
+[node name="Frame" type="NinePatchRect" parent="."]
+visible = false
+modulate = Color(0.75847405, 2.2093658, 2.4325802, 1)
+z_index = 1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_s2a4x")
