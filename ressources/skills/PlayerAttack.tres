@@ -6,5 +6,6 @@
 [resource]
 script = ExtResource("1_wpbxf")
 vfx_scene = ExtResource("2_qxnu5")
+visible_in_menu = false
 target_selector = "manual"
 metadata/_custom_type_script = "uid://d0ehdwbbf3lbd"
