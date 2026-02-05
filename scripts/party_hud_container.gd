@@ -11,4 +11,4 @@ func populate(party: Array[BattleCharacter]) -> void:
 		var ui = party_member_ui_scene.instantiate()
 		add_child(ui)
 		ui.setup(member)
-		ui.update_hp()
+		ui.sync_hp_initial()
