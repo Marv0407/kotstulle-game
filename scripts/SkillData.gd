@@ -9,6 +9,7 @@ class_name SkillData
 
 @export_group("Visuals")
 @export var vfx_scene: PackedScene 
+@export var visible_in_menu: bool = true
 
 @export_group("Targeting")
 @export_enum("enemies", "friends", "all", "user") var target_pool: String = "enemies"

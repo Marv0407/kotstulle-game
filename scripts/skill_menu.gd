@@ -11,6 +11,8 @@ func setup(actor: BattleCharacter):
 		child.queue_free()
 	
 	for skill in actor.data.skills:
+		if not skill.visible_in_menu:
+			continue
 		var btn = Button.new()
 		btn.text = skill.skill_name + " - " + str(skill.mp_cost) + " MP"
 		btn.alignment = HORIZONTAL_ALIGNMENT_LEFT
