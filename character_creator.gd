@@ -1,6 +1,7 @@
 extends Control
 
-@onready var name_input = $VBoxContainer/LineEdit 
+@onready var name_input = $Panel/VBoxContainer/LineEdit
+@onready var class_dropown = $Panel/VBoxContainer/ClassDropdown
 
 func _on_button_pressed():
 	if name_input.text != "":
