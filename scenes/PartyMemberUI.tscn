@@ -1,12 +1,22 @@
-[gd_scene load_steps=4 format=3 uid="uid://xm18nkpojt6g"]
+[gd_scene load_steps=8 format=3 uid="uid://xm18nkpojt6g"]
 
 [ext_resource type="Script" uid="uid://u7ma54xmd1lc" path="res://scripts/party_member_ui.gd" id="1_2ed12"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ck2jo"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ck2jo"]
+bg_color = Color(0.7867767, 0, 0.19790784, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_731o3"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_j42ok"]
+bg_color = Color(0.94339675, 0.853614, 0.8540354, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2ed12"]
 bg_color = Color(0.12955844, 0.1295585, 0.12955838, 1)
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ck2jo"]
-bg_color = Color(0.7867767, 0, 0.19790784, 1)
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bn8sa"]
+bg_color = Color(0.48335385, 0.6233852, 1, 1)
 
 [node name="PartyMemberUi" type="HBoxContainer"]
 script = ExtResource("1_2ed12")
@@ -15,17 +25,11 @@ script = ExtResource("1_2ed12")
 custom_minimum_size = Vector2(180, 0)
 layout_mode = 2
 
-[node name="HighlightRect" type="ColorRect" parent="NameLbl"]
-visible = false
-layout_mode = 0
-offset_right = 180.0
-offset_bottom = 25.0
-color = Color(1, 1, 1, 0.14901961)
-
 [node name="HPBar" type="ProgressBar" parent="."]
+z_index = 2
 custom_minimum_size = Vector2(360, 25)
 layout_mode = 2
-theme_override_styles/background = SubResource("StyleBoxFlat_2ed12")
+theme_override_styles/background = SubResource("StyleBoxEmpty_ck2jo")
 theme_override_styles/fill = SubResource("StyleBoxFlat_ck2jo")
 max_value = 0.0
 allow_greater = true
@@ -47,3 +51,25 @@ grow_horizontal = 2
 grow_vertical = 2
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="GhostBar" type="ProgressBar" parent="HPBar"]
+z_as_relative = false
+custom_minimum_size = Vector2(360, 25)
+layout_mode = 0
+theme_override_styles/background = SubResource("StyleBoxFlat_731o3")
+theme_override_styles/fill = SubResource("StyleBoxFlat_j42ok")
+max_value = 0.0
+allow_greater = true
+allow_lesser = true
+show_percentage = false
+
+[node name="MPBar" type="ProgressBar" parent="."]
+visible = false
+custom_minimum_size = Vector2(360, 25)
+layout_mode = 2
+theme_override_styles/background = SubResource("StyleBoxFlat_2ed12")
+theme_override_styles/fill = SubResource("StyleBoxFlat_bn8sa")
+max_value = 0.0
+allow_greater = true
+allow_lesser = true
+show_percentage = false
