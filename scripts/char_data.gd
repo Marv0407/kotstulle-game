@@ -13,6 +13,7 @@ class_name CharData
 @export var xp: int
 @export var portrait: Texture2D
 @export var sprite: Texture2D
+@export var overworld_sprite: Texture2D
 @export var resistances := {
 	"FIRE": 0,
 	"POISON": 0,

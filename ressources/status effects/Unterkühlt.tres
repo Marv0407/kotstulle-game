@@ -6,6 +6,6 @@
 script = ExtResource("1_mwm57")
 effect_name = "Unterkühlt"
 type = "Debuff"
-stat_modifier = 0.8
+stat_modifier = 0.7
 affected_stat = "speed"
 metadata/_custom_type_script = "uid://cqls26xrlvum2"

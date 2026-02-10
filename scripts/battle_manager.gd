@@ -16,6 +16,7 @@ class_name  BattleManager
 var party: Array[BattleCharacter] = []
 var enemies: Array[BattleCharacter] = []
 var turn_order: Array[BattleCharacter] = []
+var turn_order_slots: Array = []
 var current_turn_index : int
 enum BattleState { 
 	START,
@@ -28,7 +29,6 @@ var state := BattleState.START
 var pending_skill: SkillData
 var pending_user: BattleCharacter
 var focused_target_index: int = 0
-
 @onready var spawn_point = $"../DebugUI/EnemyPositionAnchor/EnemyPartyContainer"
 @onready var party_panel: PartyHUD = $"../DebugUI/CanvasLayer/PartyMenuContainer/ColorRect/PartyHUDContainer"
 @onready var log_container = $"../DebugUI/CanvasLayer/PanelContainer/ScrollContainer/LogContainer"
@@ -98,6 +98,18 @@ func start_battle():
 	current_turn_index = 0
 	refresh_turn_order_ui()
 	process_turn()
+
+func build_turn_order_ui():
+	for child in turn_order_container.get_children():
+		child.queue_free()
+
+	turn_order_slots.clear()
+
+	for c in turn_order:
+		var slot = turn_order_slot_scene.instantiate()
+		turn_order_container.add_child(slot)
+		slot.setup(c)
+		turn_order_slots.append(slot)
 # --------------
 
 #region TURN LOGIC
@@ -154,17 +166,17 @@ func next_turn():
 	end_battle(true)
 
 func refresh_turn_order_ui():
-	if not turn_order_container: return
-	for child in turn_order_container.get_children():
-		child.queue_free()
+	for slot in turn_order_slots:
+		if not slot.character.is_alive():
+			slot.set_dead()
+		else:
+			slot.set_inactive()
 
-	for i in range(turn_order.size()):
-		var c = turn_order[i]
-		if not c.is_alive(): continue
-
-		var slot = turn_order_slot_scene.instantiate()
-		turn_order_container.add_child(slot)
-		slot.setup(c, i == current_turn_index)
+	var current = get_current_actor()
+	for slot in turn_order_slots:
+		if slot.character == current:
+			slot.set_active()
+			break
 
 func calculate_turn_order():
 	turn_order.clear()
@@ -173,6 +185,7 @@ func calculate_turn_order():
 	turn_order.sort_custom(
 		func(a, b): return a.data.speed > b.data.speed
 		)
+	build_turn_order_ui()
 
 func end_battle(player_won: bool):
 	state = BattleState.END

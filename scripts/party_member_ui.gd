@@ -3,15 +3,18 @@ extends HBoxContainer
 @onready var name_label: Label = $NameLbl
 @onready var hp_label: Label = $HPBar/HPLbl
 @onready var hp_bar: ProgressBar = $HPBar
-@onready var highlight = $NameLbl/HighlightRect
+@onready var ghost_bar: ProgressBar = $HPBar/GhostBar
 
 var character: BattleCharacter
+var ghost_tween: Tween
 
 func setup(bc: BattleCharacter) -> void:
 	character = bc
 	name_label.text = character.get_char_name()
 	hp_bar.max_value = character.get_max_hp()
 	hp_bar.value = character.get_hp()
+	ghost_bar.max_value = character.get_max_hp()
+	ghost_bar.value = character.get_hp()
 
 func update_hp(old_hp: int):
 	if not character: return
@@ -23,11 +26,23 @@ func update_hp(old_hp: int):
 	tween.tween_property(hp_bar, "value", new_hp, 0.35)
 
 	if new_hp < old_hp:
+		adjust_ghost_hp(new_hp)
 		flash(Color.RED)
 	elif new_hp > old_hp:
+		ghost_bar.value = new_hp
 		flash(Color.LIME_GREEN)
 
 	hp_label.text = str(new_hp) + " / " + str(character.get_max_hp())
+
+func adjust_ghost_hp(target_value: int):
+	if ghost_tween:
+		ghost_tween.kill()
+	
+	ghost_tween = create_tween()
+	ghost_tween.tween_interval(0.5)
+	ghost_tween.tween_property(ghost_bar, "value", target_value, 0.4)\
+		.set_trans(Tween.TRANS_SINE)\
+		.set_ease(Tween.EASE_OUT)
 
 func flash(color: Color):
 	modulate = color
@@ -37,4 +52,6 @@ func sync_hp_initial():
 	if not character: return
 	hp_bar.max_value = character.get_max_hp()
 	hp_bar.value = character.get_hp()
+	ghost_bar.max_value = character.get_max_hp()
+	ghost_bar.value = character.get_hp()
 	hp_label.text = str(character.get_hp()) + " / " + str(character.get_max_hp())

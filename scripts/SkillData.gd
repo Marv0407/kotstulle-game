@@ -11,6 +11,10 @@ class_name SkillData
 @export var vfx_scene: PackedScene 
 @export var visible_in_menu: bool = true
 
+@export_group("SFX")
+@export var wind_up: AudioStream
+@export var hit_sound: AudioStream
+
 @export_group("Targeting")
 @export_enum("enemies", "friends", "all", "user") var target_pool: String = "enemies"
 @export_enum("alive", "dead", "any") var target_state: String = "alive"
