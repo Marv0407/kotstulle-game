@@ -1,6 +1,6 @@
 [gd_resource type="Resource" script_class="CharData" load_steps=7 format=3 uid="uid://csa5c6dv3fevt"]
 
-[ext_resource type="Texture2D" uid="uid://do6usik1g3hr0" path="res://icon.svg" id="1_td7qg"]
+[ext_resource type="Texture2D" uid="uid://djxkgf20hw71d" path="res://assets/portraits/jotchua_rogue.png" id="1_4hkio"]
 [ext_resource type="Script" uid="uid://b4vfx11poblgj" path="res://scripts/char_data.gd" id="2_ld8wj"]
 [ext_resource type="Script" uid="uid://d0ehdwbbf3lbd" path="res://scripts/SkillData.gd" id="3_8t7mf"]
 [ext_resource type="Resource" uid="uid://dgidyqwyuvip7" path="res://ressources/skills/PlayerAttack.tres" id="4_yf2f1"]
@@ -18,7 +18,7 @@ sp_def = 5
 luck = 20
 speed = 20
 level = 1
-portrait = ExtResource("1_td7qg")
+portrait = ExtResource("1_4hkio")
 description = "Der dunkelhäutige Dieb, agiert gerne aus dem Schatten. Spielt sein lebenlang auf der höchsten Schwierigkeitsstufe. Die Menschen haben schon immer geklaut."
 skills = Array[ExtResource("3_8t7mf")]([ExtResource("4_yf2f1"), ExtResource("5_htwhf"), ExtResource("6_r4nc4")])
 metadata/_custom_type_script = "uid://b4vfx11poblgj"
