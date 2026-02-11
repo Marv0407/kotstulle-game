@@ -35,8 +35,6 @@ var focused_target_index: int = 0
 @onready var skill_menu = $"../DebugUI/CanvasLayer/SkillMenu"
 @onready var sfx_player: AudioStreamPlayer = $SFXPlayer
 @onready var action_menu = $"../DebugUI/CanvasLayer/PartyMenuContainer/ActionsContainer/ColorRect/VBoxContainer"
-
-
 #endregion
 
 # --- SETUP ---
@@ -52,15 +50,9 @@ func start_battle():
 	for child in spawn_point.get_children(): child.queue_free()
 
 	#load party
-	for i in range(party_data.size()):
-		var data = party_data[i]
-		
-		if i == 0 and GameData.player_name != "":
-			data = data.duplicate()
-			data.name = GameData.player_name
-		
+	for member_dict in GameData.party_members:
 		var bc = BattleCharacter.new()
-		bc.setup(data)
+		bc.setup_from_dict(member_dict) 
 		party.append(bc)
 
 	party_panel.populate(party)
@@ -94,6 +86,7 @@ func start_battle():
 		sprite_node.texture = resource_sprite
 		enemies[i].battle_node = new_slot
 
+	# initiate battle
 	calculate_turn_order()
 	current_turn_index = 0
 	refresh_turn_order_ui()

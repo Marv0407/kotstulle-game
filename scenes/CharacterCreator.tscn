@@ -66,6 +66,7 @@ text = "Klasse amk"
 
 [node name="ClassDropdown" type="OptionButton" parent="Panel/VBoxContainer"]
 layout_mode = 2
+selected = 0
 item_count = 4
 popup/item_0/text = "Hero"
 popup/item_0/id = 0
@@ -95,8 +96,8 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_esd1d")
 layout_mode = 1
 offset_right = 196.0
 offset_bottom = 233.0
-theme_override_constants/h_separation = 64
-theme_override_constants/v_separation = 12
+theme_override_constants/h_separation = 80
+theme_override_constants/v_separation = 18
 columns = 2
 
 [node name="HPValLabel" type="Label" parent="Panel2/GridContainer"]
@@ -164,7 +165,7 @@ anchor_bottom = 1.0
 offset_top = -69.0
 grow_horizontal = 2
 grow_vertical = 0
-text = "bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla "
+text = "Leck Eier Leck Eier Leck Eier Leck Eier Leck Eier Leck Eier Leck Eier Leck Eier Leck Eier Leck Eier Leck Eier Leck Eier Leck Eier Leck Eier Leck Eier Leck Eier Leck Eier Leck Eier Leck Eier Leck Eier Leck Eier Leck Eier Leck Eier Leck Eier Leck Eier Leck Eier "
 fit_content = true
 
 [node name="PanelContainer" type="PanelContainer" parent="Panel2"]
@@ -182,5 +183,7 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_ksois")
 [node name="ClassPortrait" type="TextureRect" parent="Panel2/PanelContainer"]
 layout_mode = 2
 texture = ExtResource("2_esd1d")
+expand_mode = 4
+stretch_mode = 5
 
 [connection signal="pressed" from="Panel/VBoxContainer/Button" to="." method="_on_button_pressed"]
