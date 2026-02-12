@@ -58,3 +58,29 @@ func return_from_battle():
 ### --- World Handling --- ###
 var current_encounter: EncounterData = null
 var defeated_encounters: Array[String] = []
+
+### --- Level Handling --- ###
+func get_required_xp(level: int) -> int: return int(pow(level, 1.5) * 100)
+
+func add_xp_to_hero(hero_index: int, amount: int) -> bool:
+	var hero = party_members[hero_index]
+	hero["xp"] += amount
+	var leveled_up = false
+	while hero["xp"] >= get_required_xp(hero["level"]):
+		hero["xp"] -= get_required_xp(hero["level"])
+		hero["level"] += 1
+		_apply_level_up_stats(hero)
+		leveled_up = true
+	return leveled_up
+
+func _apply_level_up_stats(hero: Dictionary):
+	var res = load(hero["base_resource"]) as CharData
+	if res:
+		hero["max_hp"] += res.hp_growth
+		hero["atk"] += res.atk_growth
+		hero["def"] += res.def_growth
+		hero["sp_atk"] += res.sp_atk_growth
+		hero["sp_def"] += res.sp_def_growth
+		hero["speed"] += res.speed_growth
+		hero["current_hp"] = hero["max_hp"] # Vollständige Heilung beim Level-Up
+		print("Level Up für ", hero["name"], "!")

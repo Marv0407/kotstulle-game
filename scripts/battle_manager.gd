@@ -188,7 +188,9 @@ func end_battle(player_won: bool):
 			GameData.last_encounter_id = ""
 		var total_xp = 0
 		for e in enemies: 
-			total_xp += e.data.xp
+			total_xp += e.data.xp_yield
+		for i in range(GameData.party_members.size()):
+			GameData.add_xp_to_hero(i, total_xp)
 		post_log("Sieg! Erhaltene XP: " + str(total_xp), Color.GREEN)
 		show_result_screen("SIEG")
 	else:
