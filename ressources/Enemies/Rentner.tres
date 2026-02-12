@@ -16,6 +16,7 @@ sp_def = 2
 luck = 4
 speed = 4
 level = 1
+xp = 10
 portrait = ExtResource("2_812gd")
 sprite = ExtResource("2_812gd")
 skills = Array[ExtResource("2_gtbep")]([ExtResource("3_j3cqh")])

@@ -55,3 +55,4 @@ collision_layer = 2
 position = Vector2(-74, -83)
 collision_layer = 4
 collision_mask = 2
+encounter_id = "1"

@@ -52,3 +52,6 @@ func start_battle(current_scene_path: String, player_position: Vector2):
 
 func return_from_battle():
 	get_tree().change_scene_to_file(return_scene_path)
+
+### --- World Handling --- ###
+var defeated_encounters: Array[String] = []

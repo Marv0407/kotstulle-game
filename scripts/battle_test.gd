@@ -8,7 +8,6 @@ extends Node
 func _ready() -> void:
 	log_label.text = "Bereit.\n"
 
-
 func _on_start_battle_btn_pressed() -> void:
 	log_label.text += "\n--- Kampf startet ---\n"
 	battle_manager.start_battle()
@@ -17,3 +16,6 @@ func _on_start_battle_btn_pressed() -> void:
 func _on_basic_attack_pressed() -> void:
 	var skill = load("res://ressources/skills/PlayerAttack.tres")
 	battle_manager.start_target_selection(battle_manager.get_current_actor(), skill)
+
+func _on_button_pressed() -> void:
+	GameData.return_from_battle()
