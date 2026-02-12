@@ -1,0 +1,40 @@
+[gd_scene load_steps=5 format=3 uid="uid://daw87aehw5pcd"]
+
+[ext_resource type="Script" uid="uid://04ygs7ptp7kg" path="res://scripts/encounter.gd" id="1_2siry"]
+[ext_resource type="Texture2D" uid="uid://do6usik1g3hr0" path="res://icon.svg" id="1_xp8is"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2siry"]
+bg_color = Color(0.14, 0.14, 0.14, 1)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_qgecd"]
+size = Vector2(26, 26)
+
+[node name="Encounter" type="Area2D"]
+script = ExtResource("1_2siry")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(0.2, 0.2)
+texture = ExtResource("1_xp8is")
+
+[node name="Label" type="Label" parent="Sprite2D"]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -98.5
+offset_top = -87.0
+offset_right = -29.5
+offset_bottom = -64.0
+grow_horizontal = 2
+grow_vertical = 0
+size_flags_horizontal = 3
+size_flags_vertical = 6
+theme_override_font_sizes/font_size = 24
+theme_override_styles/normal = SubResource("StyleBoxFlat_2siry")
+text = "Testfight"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_qgecd")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

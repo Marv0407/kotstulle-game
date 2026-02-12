@@ -3,9 +3,7 @@ extends Node
 var player_name: String = "Held"
 var player_char_data: CharData
 
-### ------------------ ###
-### Testing Schmesting ###
-### ------------------ ###
+### --- Party & Stats Handling --- ###
 var party_members = []
 
 func add_new_hero(source_resource: CharData, custom_name: String):
@@ -41,5 +39,16 @@ func add_new_hero(source_resource: CharData, custom_name: String):
 	for skill in source_resource.skills:
 		if skill:
 			dict["skills"].append(skill.resource_path)
-
 	party_members.append(dict)
+
+### --- Scene Return Handling --- ###
+var return_scene_path: String = ""
+var return_position: Vector2 = Vector2.ZERO
+
+func start_battle(current_scene_path: String, player_position: Vector2):
+	return_scene_path = current_scene_path
+	return_position = player_position
+	get_tree().change_scene_to_file("res://scenes/BattleTest.tscn")
+
+func return_from_battle():
+	get_tree().change_scene_to_file(return_scene_path)

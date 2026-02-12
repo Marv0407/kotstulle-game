@@ -34,7 +34,7 @@ func _on_button_pressed():
 	GameData.party_members.clear()
 	GameData.add_new_hero(class_res, chosen_name)
 
-	get_tree().change_scene_to_file("res://scenes/BattleTest.tscn")
+	get_tree().change_scene_to_file("res://scenes/TestMap.tscn")
 
 func _update_stat_preview(index: int):
 	var class_res = load(class_options[index]) as CharData

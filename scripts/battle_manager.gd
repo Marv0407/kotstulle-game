@@ -182,6 +182,7 @@ func calculate_turn_order():
 
 func end_battle(player_won: bool):
 	state = BattleState.END
+	GameData.return_from_battle()
 	if player_won:
 		var _sum_exp = 0
 		for e in enemies: _sum_exp += e.data.xp
