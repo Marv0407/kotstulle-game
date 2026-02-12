@@ -56,23 +56,25 @@ func start_battle():
 		var bc = BattleCharacter.new()
 		bc.setup_from_dict(member_dict) 
 		party.append(bc)
-
 	party_panel.populate(party)
 
 	#load enemies and placee into slots
-	for data in enemy_data:
+	var encounter = GameData.current_encounter
+	var enemies_to_load = []
+	if encounter and not encounter.enemies.is_empty():
+		enemies_to_load = encounter.enemies
+	else:
+		enemies_to_load = enemy_data # Fallback
+	for data in enemies_to_load:
 		var bc = BattleCharacter.new()
 		bc.setup(data)
 		enemies.append(bc)
-
 	var count = enemies.size()
 	var spacing = 250.0
-
 	for i in range(count):
 		# Create slot
 		var new_slot = enemy_scene.instantiate()
 		spawn_point.add_child(new_slot)
-
 		if new_slot.has_signal("clicked"):
 			new_slot.clicked.connect(_on_target_clicked)
 			new_slot.hovered.connect(_on_slot_hovered)
@@ -97,9 +99,7 @@ func start_battle():
 func build_turn_order_ui():
 	for child in turn_order_container.get_children():
 		child.queue_free()
-
 	turn_order_slots.clear()
-
 	for c in turn_order:
 		var slot = turn_order_slot_scene.instantiate()
 		turn_order_container.add_child(slot)
@@ -179,12 +179,16 @@ func calculate_turn_order():
 	build_turn_order_ui()
 
 func end_battle(player_won: bool):
-	state = BattleState.END
+	for i in range(party.size()):
+		var bc = party[i]
+		GameData.party_members[i]["current_hp"] = bc.current_hp
 	if player_won:
+		if GameData.last_encounter_id != "":
+			GameData.defeated_encounters.append(GameData.last_encounter_id)
+			GameData.last_encounter_id = ""
 		var total_xp = 0
 		for e in enemies: 
 			total_xp += e.data.xp
-		
 		post_log("Sieg! Erhaltene XP: " + str(total_xp), Color.GREEN)
 		show_result_screen("SIEG")
 	else:

@@ -2,6 +2,7 @@ extends Node
 
 var player_name: String = "Held"
 var player_char_data: CharData
+var last_encounter_id: String = ""
 
 ### --- Party & Stats Handling --- ###
 var party_members = []
@@ -45,13 +46,15 @@ func add_new_hero(source_resource: CharData, custom_name: String):
 var return_scene_path: String = ""
 var return_position: Vector2 = Vector2.ZERO
 
-func start_battle(current_scene_path: String, player_position: Vector2):
+func start_battle(current_scene_path: String, player_position: Vector2, id: String = ""):
 	return_scene_path = current_scene_path
 	return_position = player_position
+	last_encounter_id = id
 	get_tree().change_scene_to_file("res://scenes/BattleTest.tscn")
 
 func return_from_battle():
 	get_tree().change_scene_to_file(return_scene_path)
 
 ### --- World Handling --- ###
+var current_encounter: EncounterData = null
 var defeated_encounters: Array[String] = []

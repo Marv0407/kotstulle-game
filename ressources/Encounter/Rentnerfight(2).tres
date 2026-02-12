@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="EncounterData" load_steps=4 format=3 uid="uid://dgq2apis7yt54"]
+
+[ext_resource type="Script" uid="uid://b4vfx11poblgj" path="res://scripts/char_data.gd" id="1_cvr4f"]
+[ext_resource type="Resource" uid="uid://dayx4q8vorwm3" path="res://ressources/Enemies/Rentner.tres" id="2_stjcj"]
+[ext_resource type="Script" uid="uid://cugt2hspvgpp8" path="res://scripts/EncounterData.gd" id="3_gogn5"]
+
+[resource]
+script = ExtResource("3_gogn5")
+enemies = Array[ExtResource("1_cvr4f")]([ExtResource("2_stjcj"), ExtResource("2_stjcj")])
+metadata/_custom_type_script = "uid://cugt2hspvgpp8"
