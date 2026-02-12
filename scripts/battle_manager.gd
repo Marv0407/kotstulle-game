@@ -35,8 +35,8 @@ var focused_target_index: int = 0
 @onready var skill_menu = $"../DebugUI/CanvasLayer/SkillMenu"
 @onready var sfx_player: AudioStreamPlayer = $SFXPlayer
 @onready var action_menu = $"../DebugUI/CanvasLayer/PartyMenuContainer/ActionsContainer/ColorRect/VBoxContainer"
-
-
+@onready var victory_panel = $"../DebugUI/VictoryPanel"
+@onready var victory_label = $"../DebugUI/VictoryPanel/Header"
 #endregion
 
 # --- SETUP ---
@@ -52,15 +52,9 @@ func start_battle():
 	for child in spawn_point.get_children(): child.queue_free()
 
 	#load party
-	for i in range(party_data.size()):
-		var data = party_data[i]
-		
-		if i == 0 and GameData.player_name != "":
-			data = data.duplicate()
-			data.name = GameData.player_name
-		
+	for member_dict in GameData.party_members:
 		var bc = BattleCharacter.new()
-		bc.setup(data)
+		bc.setup_from_dict(member_dict) 
 		party.append(bc)
 
 	party_panel.populate(party)
@@ -94,6 +88,7 @@ func start_battle():
 		sprite_node.texture = resource_sprite
 		enemies[i].battle_node = new_slot
 
+	# initiate battle
 	calculate_turn_order()
 	current_turn_index = 0
 	refresh_turn_order_ui()
@@ -114,7 +109,7 @@ func build_turn_order_ui():
 
 #region TURN LOGIC
 func process_turn(): 
-	if is_battle_over(): return
+	if check_battle_victory_condition(): return
 	var actor = get_current_actor()
 	process_status_effects(actor)
 
@@ -150,20 +145,16 @@ func start_enemy_turn(actor: BattleCharacter):
 
 func next_turn():
 	var checked := 0
-
 	while checked < turn_order.size():
 		current_turn_index += 1
 		if current_turn_index >= turn_order.size():
 			current_turn_index = 0
-
 		var actor = get_current_actor()
 		if actor.is_alive():
 			refresh_turn_order_ui()
 			return
-
 		checked += 1
 
-	end_battle(true)
 
 func refresh_turn_order_ui():
 	for slot in turn_order_slots:
@@ -190,8 +181,14 @@ func calculate_turn_order():
 func end_battle(player_won: bool):
 	state = BattleState.END
 	if player_won:
-		var _sum_exp = 0
-		for e in enemies: _sum_exp += e.data.xp
+		var total_xp = 0
+		for e in enemies: 
+			total_xp += e.data.xp
+		
+		post_log("Sieg! Erhaltene XP: " + str(total_xp), Color.GREEN)
+		show_result_screen("SIEG")
+	else:
+		show_result_screen("NIEDERLAGE")
 #endregion
 
 #region ATTACK & SKILL LOGIC
@@ -262,6 +259,10 @@ func apply_skill_effects(attacker: BattleCharacter, target: BattleCharacter, dam
 	if target.current_hp <= 0:
 		post_log(target.data.name + " wurde besiegt!", Color.ORANGE_RED)
 		despawn_enemy_visual(target)
+
+		if is_battle_over():
+			check_battle_victory_condition() 
+			return
 
 func _on_target_clicked(_target_node):
 	if state != BattleState.TARGET_SELECT: return
@@ -453,6 +454,21 @@ func _on_skills_btn_pressed() -> void:
 #region HELPERS
 func get_alive_party() -> Array[BattleCharacter]:
 	return party.filter(func(c): return c.is_alive())
+
+func check_battle_victory_condition():
+	if get_alive_enemies().is_empty():
+		end_battle(true)
+		return true
+	elif get_alive_party().is_empty():
+		end_battle(false)
+		return true
+	return false
+
+func show_result_screen(title: String):
+	victory_panel.show()
+	victory_label.text = title
+	# exp_label.text = details
+	print("Kampf beendet: " + title)
 
 func get_alive_enemies() -> Array[BattleCharacter]:
 	return enemies.filter(func(c): return c.is_alive())

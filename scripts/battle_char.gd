@@ -9,6 +9,29 @@ var active_effects: Array[StatusEffectData] = []
 func _ready() -> void:
 	pass 
 
+func setup_from_resource(res: CharData):
+	self.data = res.duplicate()
+	self.current_hp = res.max_hp
+
+func setup_from_dict(dict: Dictionary):
+	var base_res = load(dict["base_resource"]).duplicate()
+	self.data = base_res
+
+	self.data.name = dict["name"]
+	self.data.max_hp = dict["max_hp"]
+	self.current_hp = dict["current_hp"]
+	self.data.atk = dict["atk"]
+	self.data.def = dict["def"]
+	self.data.sp_atk = dict["sp_atk"]
+	self.data.sp_def = dict["sp_def"]
+	self.data.speed = dict["speed"]
+	self.data.luck = dict["luck"]
+	self.data.skills.clear()
+	for s_path in dict["skills"]:
+		var s_res = load(s_path)
+		self.data.skills.append(s_res)
+	# TODO später hier noch Equipment-Stats dazurechnen..
+
 func setup(character_data: CharData):
 	data = character_data
 	current_hp = data.max_hp
@@ -39,4 +62,4 @@ func get_stat(stat_name: String) -> int:
 			var effect_strength = (1.0 - effect.stat_modifier) * effect.current_stacks
 			multiplier -= effect_strength
 
-	return int(base_value * max(0.1, multiplier)) # Nicht unter 10% sinken lassen
+	return int(base_value * max(0.1, multiplier)) # Nicht unter X% sinken lassen
