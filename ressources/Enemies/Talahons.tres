@@ -1,7 +1,9 @@
-[gd_resource type="Resource" script_class="CharData" load_steps=3 format=3 uid="uid://cdo0oen0bff3p"]
+[gd_resource type="Resource" script_class="CharData" load_steps=5 format=3 uid="uid://cdo0oen0bff3p"]
 
 [ext_resource type="Script" uid="uid://b4vfx11poblgj" path="res://scripts/char_data.gd" id="1_8l5h6"]
 [ext_resource type="Texture2D" uid="uid://dmtq6i63iicvx" path="res://ressources/sprites/talahon_b.png" id="2_t20ei"]
+[ext_resource type="Script" uid="uid://d0ehdwbbf3lbd" path="res://scripts/SkillData.gd" id="2_ts8p0"]
+[ext_resource type="Resource" uid="uid://b5eif5h33k1ti" path="res://ressources/EnemySkills/Schattenboxen.tres" id="3_0h4ic"]
 
 [resource]
 script = ExtResource("1_8l5h6")
@@ -14,5 +16,6 @@ sp_def = 2
 luck = 6
 speed = 6
 level = 1
+skills = Array[ExtResource("2_ts8p0")]([ExtResource("3_0h4ic")])
 sprite = ExtResource("2_t20ei")
 metadata/_custom_type_script = "uid://b4vfx11poblgj"

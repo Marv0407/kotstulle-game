@@ -3,9 +3,10 @@
 [ext_resource type="Texture2D" uid="uid://dnaof1shvtgd5" path="res://assets/portraits/jotchua.png" id="1_4ygyj"]
 [ext_resource type="Script" uid="uid://b4vfx11poblgj" path="res://scripts/char_data.gd" id="2_w4po3"]
 [ext_resource type="Script" uid="uid://d0ehdwbbf3lbd" path="res://scripts/SkillData.gd" id="3_k4ngx"]
-[ext_resource type="Resource" uid="uid://dgidyqwyuvip7" path="res://ressources/skills/PlayerAttack.tres" id="4_08kas"]
-[ext_resource type="Resource" uid="uid://b4whja5r01bmo" path="res://ressources/skills/feature_tester.tres" id="5_l3v28"]
-[ext_resource type="Resource" uid="uid://dw0u3emqgo6aw" path="res://ressources/skills/random-duo.tres" id="6_of13q"]
+[ext_resource type="Resource" uid="uid://dgidyqwyuvip7" path="res://ressources/PlayerSkills/PlayerAttack.tres" id="4_08kas"]
+[ext_resource type="Resource" uid="uid://b4whja5r01bmo" path="res://ressources/PlayerSkills/feature_tester.tres" id="5_l3v28"]
+[ext_resource type="Resource" uid="uid://dw0u3emqgo6aw" path="res://ressources/PlayerSkills/random-duo.tres" id="6_of13q"]
+
 
 [resource]
 script = ExtResource("2_w4po3")
