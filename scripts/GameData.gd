@@ -64,13 +64,20 @@ func get_required_xp(level: int) -> int: return int(pow(level, 1.5) * 100)
 
 func add_xp_to_hero(hero_index: int, amount: int) -> bool:
 	var hero = party_members[hero_index]
+	var old_level = hero["level"]
 	hero["xp"] += amount
+	
+	print("--- XP LOG ", hero["name"], " ---")
+	print("Erhalten: +", amount, " XP")
+	print("Aktuell: ", hero["xp"], " / ", get_required_xp(hero["level"]), " für Level ", hero["level"] + 1)
+	
 	var leveled_up = false
 	while hero["xp"] >= get_required_xp(hero["level"]):
 		hero["xp"] -= get_required_xp(hero["level"])
 		hero["level"] += 1
 		_apply_level_up_stats(hero)
 		leveled_up = true
+		print("!!! LEVEL UP !!! Lvl: ", old_level, " > ", hero["level"])
 	return leveled_up
 
 func _apply_level_up_stats(hero: Dictionary):

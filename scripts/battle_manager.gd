@@ -37,6 +37,11 @@ var focused_target_index: int = 0
 @onready var action_menu = $"../DebugUI/CanvasLayer/PartyMenuContainer/ActionsContainer/ColorRect/VBoxContainer"
 @onready var victory_panel = $"../DebugUI/VictoryPanel"
 @onready var victory_label = $"../DebugUI/VictoryPanel/Header"
+@onready var xp_gained_label = $"../DebugUI/VictoryPanel/GridContainer/ExpLabel"
+@onready var gold_gained_label = $"../DebugUI/VictoryPanel/GridContainer/GoldLabel"
+
+
+
 #endregion
 
 # --- SETUP ---
@@ -473,7 +478,8 @@ func check_battle_victory_condition():
 func show_result_screen(title: String):
 	victory_panel.show()
 	victory_label.text = title
-	# exp_label.text = details
+	#xp_gained_label.text = total_xp_gained # TODO
+	#gold_gained_label.text = total_gold_gained # TODO
 	print("Kampf beendet: " + title)
 
 func get_alive_enemies() -> Array[BattleCharacter]:

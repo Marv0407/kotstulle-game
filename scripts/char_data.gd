@@ -37,6 +37,9 @@ class_name CharData
 
 @export_group("Drops")
 @export var xp_yield: int
+@export var gold: int
+@export var items: Array[SkillData] = [] # FIXME hier ItemData einfügen
+@export_range(0, 100) var item_dropchance: float = 100
 
 @export_group("Misc.")
 @export var resistances := {

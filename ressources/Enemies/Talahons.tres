@@ -18,4 +18,6 @@ speed = 6
 level = 1
 skills = Array[ExtResource("2_ts8p0")]([ExtResource("3_0h4ic")])
 sprite = ExtResource("2_t20ei")
+xp_yield = 30
+gold = 12
 metadata/_custom_type_script = "uid://b4vfx11poblgj"
