@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://b4vfx11poblgj" path="res://scripts/char_data.gd" id="1_8o84g"]
 [ext_resource type="Texture2D" uid="uid://bh8cwmw6im54w" path="res://ressources/sprites/Rentner_Stock.png" id="2_812gd"]
 [ext_resource type="Script" uid="uid://d0ehdwbbf3lbd" path="res://scripts/SkillData.gd" id="2_gtbep"]
-[ext_resource type="Resource" uid="uid://cvwhn0040wxgy" path="res://ressources/skills/Stockhieb.tres" id="3_j3cqh"]
+[ext_resource type="Resource" uid="uid://cvwhn0040wxgy" path="res://ressources/EnemySkills/Stockhieb.tres" id="4_gtbep"]
 
 [resource]
 script = ExtResource("1_8o84g")
@@ -16,8 +16,9 @@ sp_def = 2
 luck = 4
 speed = 4
 level = 1
-xp = 10
+skills = Array[ExtResource("2_gtbep")]([ExtResource("4_gtbep")])
 portrait = ExtResource("2_812gd")
 sprite = ExtResource("2_812gd")
-skills = Array[ExtResource("2_gtbep")]([ExtResource("3_j3cqh")])
+xp_yield = 120
+gold = 1
 metadata/_custom_type_script = "uid://b4vfx11poblgj"

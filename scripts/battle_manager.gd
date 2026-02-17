@@ -12,9 +12,10 @@ class_name  BattleManager
 @export var sound_focus: AudioStream     
 @export var sound_select: AudioStream    
 @export var sound_cancel: AudioStream    
-
+# --- PARTIES ---
 var party: Array[BattleCharacter] = []
 var enemies: Array[BattleCharacter] = []
+# --- TURN STATES & ORDER ---
 var turn_order: Array[BattleCharacter] = []
 var turn_order_slots: Array = []
 var current_turn_index : int
@@ -26,9 +27,11 @@ enum BattleState {
 	END
 }
 var state := BattleState.START
+# --- TARGETING ---
 var pending_skill: SkillData
 var pending_user: BattleCharacter
 var focused_target_index: int = 0
+# --- VFX & SFX ---
 @onready var spawn_point = $"../DebugUI/EnemyPositionAnchor/EnemyPartyContainer"
 @onready var party_panel: PartyHUD = $"../DebugUI/CanvasLayer/PartyMenuContainer/ColorRect/PartyHUDContainer"
 @onready var log_container = $"../DebugUI/CanvasLayer/PanelContainer/ScrollContainer/LogContainer"
@@ -37,6 +40,13 @@ var focused_target_index: int = 0
 @onready var action_menu = $"../DebugUI/CanvasLayer/PartyMenuContainer/ActionsContainer/ColorRect/VBoxContainer"
 @onready var victory_panel = $"../DebugUI/VictoryPanel"
 @onready var victory_label = $"../DebugUI/VictoryPanel/Header"
+@onready var xp_gained_label = $"../DebugUI/VictoryPanel/GridContainer/ExpLabel"
+@onready var gold_gained_label = $"../DebugUI/VictoryPanel/GridContainer/GoldLabel"
+@onready var loot_gained_label = $"../DebugUI/VictoryPanel/GridContainer/LootLabel"
+@onready var victory_button = $"../DebugUI/VictoryPanel/Button"
+var earned_xp: int = 0
+var earned_gold: int = 0
+var earned_loot: Array[String] = []
 #endregion
 
 # --- SETUP ---
@@ -56,23 +66,25 @@ func start_battle():
 		var bc = BattleCharacter.new()
 		bc.setup_from_dict(member_dict) 
 		party.append(bc)
-
 	party_panel.populate(party)
 
 	#load enemies and placee into slots
-	for data in enemy_data:
+	var encounter = GameData.current_encounter
+	var enemies_to_load = []
+	if encounter and not encounter.enemies.is_empty():
+		enemies_to_load = encounter.enemies
+	else:
+		enemies_to_load = enemy_data # Fallback
+	for data in enemies_to_load:
 		var bc = BattleCharacter.new()
 		bc.setup(data)
 		enemies.append(bc)
-
 	var count = enemies.size()
 	var spacing = 250.0
-
 	for i in range(count):
 		# Create slot
 		var new_slot = enemy_scene.instantiate()
 		spawn_point.add_child(new_slot)
-
 		if new_slot.has_signal("clicked"):
 			new_slot.clicked.connect(_on_target_clicked)
 			new_slot.hovered.connect(_on_slot_hovered)
@@ -97,9 +109,7 @@ func start_battle():
 func build_turn_order_ui():
 	for child in turn_order_container.get_children():
 		child.queue_free()
-
 	turn_order_slots.clear()
-
 	for c in turn_order:
 		var slot = turn_order_slot_scene.instantiate()
 		turn_order_container.add_child(slot)
@@ -179,16 +189,23 @@ func calculate_turn_order():
 	build_turn_order_ui()
 
 func end_battle(player_won: bool):
-	state = BattleState.END
+	for i in range(party.size()):
+		var bc = party[i]
+		GameData.party_members[i]["current_hp"] = bc.current_hp
 	if player_won:
-		var total_xp = 0
+		if GameData.last_encounter_id != "":
+			GameData.defeated_encounters.append(GameData.last_encounter_id)
+			GameData.last_encounter_id = ""
 		for e in enemies: 
-			total_xp += e.data.xp
-		
-		post_log("Sieg! Erhaltene XP: " + str(total_xp), Color.GREEN)
-		show_result_screen("SIEG")
+			earned_xp += e.data.xp_yield
+			earned_gold += e.data.gold
+			#if e.data.items and randf_range(0, 100) <= e.data.item_dropchance: #TODO
+				#earned_loot.append(e.data.items)
+		for i in range(GameData.party_members.size()):
+			GameData.add_xp_to_hero(i, earned_xp)
+		display_battle_results("SIEG")
 	else:
-		show_result_screen("NIEDERLAGE")
+		display_battle_results("VERLOREN LOL")
 #endregion
 
 #region ATTACK & SKILL LOGIC
@@ -400,16 +417,13 @@ func set_player_ui_enabled(enabled: bool):
 func highlight_potential_targets(active: bool):
 	for e in enemies:
 		if not e.battle_node: continue
-
 		if e.battle_node.has_meta("highlight_tween"):
 			var old_tween = e.battle_node.get_meta("highlight_tween")
 			if old_tween and old_tween.is_valid():
 				old_tween.kill()
 			e.battle_node.remove_meta("highlight_tween")
-
 		e.battle_node.modulate = Color.WHITE
 		e.battle_node.get_node("Sprite2D").modulate = Color.WHITE
-		
 		if e.battle_node.has_method("reset_visuals"):
 			e.battle_node.reset_visuals()
 
@@ -421,6 +435,21 @@ func highlight_potential_targets(active: bool):
 			e.battle_node.set_meta("highlight_tween", tween)
 		else:
 			e.battle_node.is_targetable = false
+
+func display_battle_results(title: String):
+	victory_panel.show()
+	victory_label.text = title
+	if title == "SIEG":
+		#play_sfx() # TODO
+		xp_gained_label.text = str(earned_xp)
+		gold_gained_label.text = str(earned_gold)
+		loot_gained_label.text = _get_grouped_loot_text()
+	else:
+		xp_gained_label.text = "0"
+		gold_gained_label.text = "0"
+		loot_gained_label.text = "Goar nix"
+		pass
+	victory_button.grab_focus()
 
 func open_skill_menu():
 	var actor = get_current_actor()
@@ -464,11 +493,24 @@ func check_battle_victory_condition():
 		return true
 	return false
 
-func show_result_screen(title: String):
-	victory_panel.show()
-	victory_label.text = title
-	# exp_label.text = details
-	print("Kampf beendet: " + title)
+func _get_grouped_loot_text() -> String:
+	if earned_loot.is_empty():
+		return "Kein Loot gefunden"
+	var counts = {}
+	for item in earned_loot:
+		if counts.has(item):
+			counts[item] += 1
+		else:
+			counts[item] = 1
+
+	var final_text = ""
+	for item_name in counts.keys():
+		var amount = counts[item_name]
+		if amount > 1:
+			final_text += "- " + item_name + " x" + str(amount) + "\n"
+		else:
+			final_text += "- " + item_name + "\n"
+	return final_text
 
 func get_alive_enemies() -> Array[BattleCharacter]:
 	return enemies.filter(func(c): return c.is_alive())

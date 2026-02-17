@@ -1,10 +1,11 @@
 [gd_resource type="Resource" script_class="SkillData" load_steps=2 format=3 uid="uid://cvwhn0040wxgy"]
 
-[ext_resource type="Script" uid="uid://d0ehdwbbf3lbd" path="res://scripts/SkillData.gd" id="1_qh10x"]
+[ext_resource type="Script" uid="uid://d0ehdwbbf3lbd" path="res://scripts/SkillData.gd" id="1_e815w"]
 
 [resource]
-script = ExtResource("1_qh10x")
+script = ExtResource("1_e815w")
 skill_name = "Stockhieb"
+visible_in_menu = false
 target_selector = "random"
 base_damage = 5
 metadata/_custom_type_script = "uid://d0ehdwbbf3lbd"
