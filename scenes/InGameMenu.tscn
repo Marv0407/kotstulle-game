@@ -1,0 +1,54 @@
+[gd_scene load_steps=4 format=3 uid="uid://d0kcksev6mafn"]
+
+[ext_resource type="Script" uid="uid://b8x04g2xbmitx" path="res://scripts/in_game_menu.gd" id="1_kkpiy"]
+[ext_resource type="PackedScene" uid="uid://xm18nkpojt6g" path="res://scenes/PartyMemberUI.tscn" id="2_d7o6g"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_d7o6g"]
+content_margin_left = 6.0
+content_margin_top = 6.0
+content_margin_right = 6.0
+content_margin_bottom = 6.0
+bg_color = Color(0.06696608, 0.06793864, 0.1393469, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_blend = true
+
+[node name="InGameMenu" type="CanvasLayer"]
+script = ExtResource("1_kkpiy")
+party_member_ui_scene = ExtResource("2_d7o6g")
+
+[node name="PanelContainer" type="PanelContainer" parent="."]
+offset_right = 40.0
+offset_bottom = 40.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_d7o6g")
+
+[node name="MainContainer" type="HBoxContainer" parent="PanelContainer"]
+layout_mode = 2
+
+[node name="ButtonList" type="VBoxContainer" parent="PanelContainer/MainContainer"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+
+[node name="PartyBtn" type="Button" parent="PanelContainer/MainContainer/ButtonList"]
+layout_mode = 2
+text = "Party"
+
+[node name="ItemsBtn" type="Button" parent="PanelContainer/MainContainer/ButtonList"]
+layout_mode = 2
+text = "Items"
+
+[node name="SaveBtn" type="Button" parent="PanelContainer/MainContainer/ButtonList"]
+layout_mode = 2
+text = "Save"
+
+[node name="QuitBtn" type="Button" parent="PanelContainer/MainContainer/ButtonList"]
+layout_mode = 2
+text = "Quit"
+
+[node name="ContentArea" type="MarginContainer" parent="PanelContainer/MainContainer"]
+layout_mode = 2
+
+[node name="PartyView" type="VBoxContainer" parent="PanelContainer/MainContainer/ContentArea"]
+layout_mode = 2

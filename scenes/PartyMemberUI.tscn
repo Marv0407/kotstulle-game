@@ -21,8 +21,11 @@ bg_color = Color(0.48335385, 0.6233852, 1, 1)
 [node name="PartyMemberUi" type="HBoxContainer"]
 script = ExtResource("1_2ed12")
 
-[node name="NameLbl" type="Label" parent="."]
+[node name="NameLabel" type="Label" parent="."]
 custom_minimum_size = Vector2(180, 0)
+layout_mode = 2
+
+[node name="LevelLabel" type="Label" parent="."]
 layout_mode = 2
 
 [node name="HPBar" type="ProgressBar" parent="."]
@@ -36,7 +39,7 @@ allow_greater = true
 allow_lesser = true
 show_percentage = false
 
-[node name="HPLbl" type="Label" parent="HPBar"]
+[node name="HPLabel" type="Label" parent="HPBar"]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -73,3 +76,6 @@ max_value = 0.0
 allow_greater = true
 allow_lesser = true
 show_percentage = false
+
+[node name="XPLabel" type="Label" parent="."]
+layout_mode = 2

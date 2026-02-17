@@ -1,7 +1,7 @@
 extends HBoxContainer
 
-@onready var name_label: Label = $NameLbl
-@onready var hp_label: Label = $HPBar/HPLbl
+@onready var name_label: Label = $NameLabel
+@onready var hp_label: Label = $HPBar/HPLabel
 @onready var hp_bar: ProgressBar = $HPBar
 @onready var ghost_bar: ProgressBar = $HPBar/GhostBar
 
@@ -55,3 +55,14 @@ func sync_hp_initial():
 	ghost_bar.max_value = character.get_max_hp()
 	ghost_bar.value = character.get_hp()
 	hp_label.text = str(character.get_hp()) + " / " + str(character.get_max_hp())
+
+func update_display(data: Dictionary):
+	name_label.text = data["name"]
+	$LevelLabel.text = "Lvl: " + str(data["level"]) # TODO
+	hp_bar.max_value = data["max_hp"]
+	hp_bar.value = data["current_hp"]
+	hp_label.text = str(data["current_hp"]) + " / " + str(data["max_hp"])
+
+	if has_node("XPLabel"):
+		var req_xp = GameData.get_required_xp(data["level"])
+		$XPLabel.text = "XP: %d / %d" % [data["xp"], req_xp]
