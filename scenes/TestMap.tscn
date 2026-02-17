@@ -1,10 +1,11 @@
-[gd_scene load_steps=8 format=4 uid="uid://cfft8jgum6dhw"]
+[gd_scene load_steps=9 format=4 uid="uid://cfft8jgum6dhw"]
 
 [ext_resource type="Script" uid="uid://bxh7rrnqs0bta" path="res://scripts/test_map.gd" id="1_c2xor"]
 [ext_resource type="PackedScene" uid="uid://7p25i524blrh" path="res://scenes/Player.tscn" id="1_fodck"]
 [ext_resource type="Texture2D" uid="uid://dp21td8yk1lv0" path="res://assets/tilesets/test_tileset/[A]_type1/[A]Dirt1-Dirt2_pipo.png" id="1_jpasy"]
 [ext_resource type="PackedScene" uid="uid://daw87aehw5pcd" path="res://scenes/Encounter.tscn" id="3_ndu6v"]
 [ext_resource type="Resource" uid="uid://bd7v43x2tcjtu" path="res://ressources/Encounter/TalahonRentner.tres" id="5_q04aa"]
+[ext_resource type="PackedScene" uid="uid://d0kcksev6mafn" path="res://scenes/InGameMenu.tscn" id="6_s2mfq"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_ndu6v"]
 texture = ExtResource("1_jpasy")
@@ -43,3 +44,5 @@ collision_layer = 4
 collision_mask = 2
 encounter_data = ExtResource("5_q04aa")
 encounter_id = "1"
+
+[node name="InGameMenu" parent="." instance=ExtResource("6_s2mfq")]

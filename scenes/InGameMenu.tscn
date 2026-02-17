@@ -16,12 +16,20 @@ border_width_bottom = 4
 border_blend = true
 
 [node name="InGameMenu" type="CanvasLayer"]
+process_mode = 3
 script = ExtResource("1_kkpiy")
 party_member_ui_scene = ExtResource("2_d7o6g")
 
 [node name="PanelContainer" type="PanelContainer" parent="."]
-offset_right = 40.0
-offset_bottom = 40.0
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -216.0
+offset_top = -148.0
+grow_horizontal = 0
+grow_vertical = 0
 theme_override_styles/panel = SubResource("StyleBoxFlat_d7o6g")
 
 [node name="MainContainer" type="HBoxContainer" parent="PanelContainer"]
@@ -51,4 +59,7 @@ text = "Quit"
 layout_mode = 2
 
 [node name="PartyView" type="VBoxContainer" parent="PanelContainer/MainContainer/ContentArea"]
+unique_name_in_owner = true
 layout_mode = 2
+
+[connection signal="pressed" from="PanelContainer/MainContainer/ButtonList/PartyBtn" to="." method="_on_party_btn_pressed"]
