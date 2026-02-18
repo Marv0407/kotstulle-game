@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="DamageEffect" load_steps=2 format=3 uid="uid://bvqcmf26peen0"]
+
+[ext_resource type="Script" uid="uid://dlcgln540345m" path="res://scripts/ResourceSkripts/SkillData/Modules/DamageEffect.gd" id="1_38jfk"]
+
+[resource]
+script = ExtResource("1_38jfk")
+base_damage = 25
+scaling_stat = "sp_atk"
+scaling_factor = 1.2
+damage_type = "Magic"
+metadata/_custom_type_script = "uid://dlcgln540345m"

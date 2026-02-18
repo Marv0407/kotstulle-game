@@ -1,7 +1,8 @@
 [gd_resource type="Resource" script_class="CharData" load_steps=3 format=3 uid="uid://d3g0113atagwb"]
 
-[ext_resource type="Script" uid="uid://b4vfx11poblgj" path="res://scripts/char_data.gd" id="1_huch4"]
-[ext_resource type="Script" uid="uid://d0ehdwbbf3lbd" path="res://scripts/SkillData.gd" id="2_ptw5i"]
+[ext_resource type="Script" uid="uid://b4vfx11poblgj" path="res://scripts/ResourceSkripts/char_data.gd" id="1_huch4"]
+[ext_resource type="Script" uid="uid://d0ehdwbbf3lbd" path="res://scripts/ResourceSkripts/SkillData/Base/SkillData.gd" id="2_ptw5i"]
+
 
 [resource]
 script = ExtResource("1_huch4")

@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="ApplyStatusEffect" load_steps=3 format=3 uid="uid://x0xnsx8hiobt"]
+
+[ext_resource type="Script" uid="uid://ur1qtwpvuffp" path="res://scripts/ResourceSkripts/SkillData/Modules/ApplyStatusEffect.gd" id="1_uuahs"]
+[ext_resource type="Resource" uid="uid://l4ns0lici5sr" path="res://ressources/StatusEffects/Verbrennung.tres" id="2_rxeyt"]
+
+[resource]
+script = ExtResource("1_uuahs")
+status = ExtResource("2_rxeyt")
+metadata/_custom_type_script = "uid://ur1qtwpvuffp"

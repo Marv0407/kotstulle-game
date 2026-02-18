@@ -211,35 +211,22 @@ func end_battle(player_won: bool):
 #region ATTACK & SKILL LOGIC
 func execute_skill(user: BattleCharacter, skill: SkillData, initial_targets: Array[BattleCharacter]):
 	state = BattleState.ENEMY_TURN 
+	var context = CombatContext.new(self)
+	var targets = initial_targets
+	if skill.targeting:
+		var config = {
+			"target_pool": skill.targeting.target_pool,
+			"state": skill.targeting.target_state,
+			"selector": skill.targeting.target_selector,
+			"count": skill.targeting.target_count
+		}
+		targets = get_targets_dynamic(user, config)
 
-	var is_multi_random = (skill.target_selector == "random")
-	for hit in range(skill.hit_count):
-		var current_targets = initial_targets
-		if is_multi_random:
-
-			current_targets = get_targets_dynamic(user, {
-				"target_pool": "enemies", 
-				"selector": "random", 
-				"count": skill.target_count
-			})
-
-		for target in current_targets:
-			if target.is_alive():
-				var damage = calculate_damage(user, target, skill)
-				apply_skill_effects(user, target, damage, skill)
-
-				if hit == skill.hit_count - 1 and skill.status_to_apply:
-					if randf() * 100 < skill.chance_to_apply:
-						apply_status_effect(user, target, skill.status_to_apply)
-
-		if skill.hit_count > 1:
-			await get_tree().create_timer(skill.delay_between_hits).timeout
-		else:
-			await get_tree().create_timer(0.2).timeout
+	for effect in skill.effects:
+		effect.apply(user, targets, context)
 
 	await get_tree().create_timer(0.6).timeout
-	var focus_owner = get_viewport().gui_get_focus_owner()
-	if focus_owner: focus_owner.release_focus()
+
 	next_turn()
 	process_turn()
 
@@ -285,9 +272,9 @@ func _on_target_clicked(_target_node):
 	if state != BattleState.TARGET_SELECT: return
 	play_sfx(sound_select)
 	highlight_potential_targets(false)
-	if pending_skill.target_selector == "all":
+	if pending_skill.targeting.target_selector == "all":
 		execute_skill(pending_user, pending_skill, get_alive_enemies())
-	elif pending_skill.target_selector == "random":
+	elif pending_skill.targeting.target_selector == "random":
 		execute_skill(pending_user, pending_skill, [])
 	else:
 		var target_character = null
@@ -467,8 +454,8 @@ func _on_skill_chosen(skill: SkillData):
 	skill_menu.hide()
 	play_sfx(sound_select)
 	start_target_selection(get_current_actor(), skill)
-	if skill.target_selector == "all": post_log("Ziel: Alle Gegner", Color.LIGHT_CYAN)
-	elif skill.target_selector == "random": post_log("Ziel: Zufällig", Color.LIGHT_CYAN)
+	if skill.targeting.target_selector == "all": post_log("Ziel: Alle Gegner", Color.LIGHT_CYAN)
+	elif skill.targeting.target_selector == "random": post_log("Ziel: Zufällig", Color.LIGHT_CYAN)
 	else: post_log("Ziel wählen...", Color.LIGHT_CYAN)
 
 func _on_skill_menu_canceled():
@@ -569,7 +556,7 @@ func cancel_target_selection():
 func _on_slot_hovered(hovered_slot):
 	if state != BattleState.TARGET_SELECT or not pending_skill: return
 	play_sfx(sound_focus)
-	match pending_skill.target_selector:
+	match pending_skill.targeting.target_selector:
 		"all", "random":
 			for e in enemies:
 				if e.is_alive() and e.battle_node:

@@ -1,11 +1,12 @@
-[gd_resource type="Resource" script_class="CharData" load_steps=7 format=3 uid="uid://d27kr4qwd3ng"]
+[gd_resource type="Resource" script_class="CharData" load_steps=8 format=3 uid="uid://d27kr4qwd3ng"]
 
 [ext_resource type="Texture2D" uid="uid://dnaof1shvtgd5" path="res://assets/portraits/jotchua.png" id="1_4ygyj"]
-[ext_resource type="Script" uid="uid://b4vfx11poblgj" path="res://scripts/char_data.gd" id="2_w4po3"]
-[ext_resource type="Script" uid="uid://d0ehdwbbf3lbd" path="res://scripts/SkillData.gd" id="3_k4ngx"]
+[ext_resource type="Script" uid="uid://d0ehdwbbf3lbd" path="res://scripts/ResourceSkripts/SkillData/Base/SkillData.gd" id="1_w4po3"]
+[ext_resource type="Script" uid="uid://b4vfx11poblgj" path="res://scripts/ResourceSkripts/char_data.gd" id="2_w4po3"]
 [ext_resource type="Resource" uid="uid://dgidyqwyuvip7" path="res://ressources/PlayerSkills/PlayerAttack.tres" id="4_08kas"]
 [ext_resource type="Resource" uid="uid://b4whja5r01bmo" path="res://ressources/PlayerSkills/feature_tester.tres" id="5_l3v28"]
 [ext_resource type="Resource" uid="uid://dw0u3emqgo6aw" path="res://ressources/PlayerSkills/random-duo.tres" id="6_of13q"]
+[ext_resource type="Resource" uid="uid://cysvirbbtdpos" path="res://ressources/PlayerSkills/Feuerball/Feuerball.tres" id="7_k4ngx"]
 
 [resource]
 script = ExtResource("2_w4po3")
@@ -22,6 +23,6 @@ speed = 15
 level = 1
 atk_growth = 1
 sp_atk_growth = 1
-skills = Array[ExtResource("3_k4ngx")]([ExtResource("4_08kas"), ExtResource("5_l3v28"), ExtResource("6_of13q")])
+skills = Array[ExtResource("1_w4po3")]([ExtResource("4_08kas"), ExtResource("5_l3v28"), ExtResource("6_of13q"), ExtResource("7_k4ngx")])
 portrait = ExtResource("1_4ygyj")
 metadata/_custom_type_script = "uid://b4vfx11poblgj"
