@@ -1,7 +1,7 @@
 [gd_resource type="Resource" script_class="CharData" load_steps=3 format=3 uid="uid://m8blmoddq8s2"]
 
 [ext_resource type="Script" uid="uid://b4vfx11poblgj" path="res://scripts/ResourceSkripts/char_data.gd" id="1_jqix2"]
-[ext_resource type="Texture2D" uid="uid://dc27x8whoi8op" path="res://ressources/sprites/SF_Pommespanzer_a.png" id="2_dohw1"]
+[ext_resource type="Texture2D" uid="uid://dc27x8whoi8op" path="res://assets/sprites/SF_Pommespanzer_a.png" id="2_dohw1"]
 
 [resource]
 script = ExtResource("1_jqix2")

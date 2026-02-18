@@ -1,0 +1,28 @@
+[gd_resource type="Resource" script_class="CharData" load_steps=8 format=3 uid="uid://d27kr4qwd3ng"]
+
+[ext_resource type="Script" uid="uid://d0ehdwbbf3lbd" path="res://scripts/ResourceSkripts/SkillData/Base/SkillData.gd" id="1_fibdm"]
+[ext_resource type="Texture2D" uid="uid://dnaof1shvtgd5" path="res://assets/portraits/jotchua.png" id="2_vvllh"]
+[ext_resource type="Script" uid="uid://b4vfx11poblgj" path="res://scripts/ResourceSkripts/char_data.gd" id="3_jamug"]
+[ext_resource type="Resource" uid="uid://dgidyqwyuvip7" path="res://resources/Skills/PlayerSkills/PlayerAttack.tres" id="4_pw8c1"]
+[ext_resource type="Resource" uid="uid://b4whja5r01bmo" path="res://resources/Skills/PlayerSkills/feature_tester.tres" id="5_hyov2"]
+[ext_resource type="Resource" uid="uid://dw0u3emqgo6aw" path="res://resources/Skills/PlayerSkills/random-duo.tres" id="6_h3rgq"]
+[ext_resource type="Resource" uid="uid://cysvirbbtdpos" path="res://resources/Skills/PlayerSkills/Feuerball/Feuerball.tres" id="7_awn2o"]
+
+[resource]
+script = ExtResource("3_jamug")
+name = "Hero"
+description = "Der Alleskönner und alles Gönner. Jack of all trades, master of jacking off."
+max_hp = 100
+max_mp = 100
+atk = 15
+def = 15
+sp_atk = 15
+sp_def = 15
+luck = 15
+speed = 15
+level = 1
+atk_growth = 1
+sp_atk_growth = 1
+skills = Array[ExtResource("1_fibdm")]([ExtResource("4_pw8c1"), ExtResource("5_hyov2"), ExtResource("6_h3rgq"), ExtResource("7_awn2o")])
+portrait = ExtResource("2_vvllh")
+metadata/_custom_type_script = "uid://b4vfx11poblgj"

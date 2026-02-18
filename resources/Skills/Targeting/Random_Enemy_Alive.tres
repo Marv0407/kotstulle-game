@@ -1,0 +1,7 @@
+[gd_resource type="Resource" script_class="SkillTargetingData" load_steps=2 format=3 uid="uid://cnipbww63v6ij"]
+
+[ext_resource type="Script" uid="uid://convp4xwd36jv" path="res://scripts/ResourceSkripts/SkillData/Modules/SkillTargetingData.gd" id="1_xgc85"]
+
+[resource]
+script = ExtResource("1_xgc85")
+metadata/_custom_type_script = "uid://convp4xwd36jv"

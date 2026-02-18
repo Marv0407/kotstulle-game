@@ -213,7 +213,7 @@ func execute_skill(user: BattleCharacter, skill: SkillData, initial_targets: Arr
 	state = BattleState.ENEMY_TURN 
 	var context = CombatContext.new(self)
 	var targets = initial_targets
-	if skill.targeting:
+	if skill.targeting and skill.targeting.target_selector != "manual":
 		var config = {
 			"target_pool": skill.targeting.target_pool,
 			"state": skill.targeting.target_state,
@@ -221,12 +221,9 @@ func execute_skill(user: BattleCharacter, skill: SkillData, initial_targets: Arr
 			"count": skill.targeting.target_count
 		}
 		targets = get_targets_dynamic(user, config)
-
 	for effect in skill.effects:
 		effect.apply(user, targets, context)
-
 	await get_tree().create_timer(0.6).timeout
-
 	next_turn()
 	process_turn()
 

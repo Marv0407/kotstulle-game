@@ -1,7 +1,8 @@
 [gd_scene load_steps=4 format=3 uid="uid://gm8oertihbmx"]
 
-[ext_resource type="Texture2D" uid="uid://c15f56jyfo8js" path="res://ressources/sprites/fire1.png" id="1_df7el"]
+[ext_resource type="Texture2D" uid="uid://c15f56jyfo8js" path="res://assets/sprites/fire1.png" id="1_df7el"]
 [ext_resource type="Script" uid="uid://cviijyugpkfma" path="res://HitEffect.gd" id="2_761mu"]
+
 
 [sub_resource type="Curve" id="Curve_5txia"]
 _limits = [-200.0, 200.0, 0.0, 1.0]

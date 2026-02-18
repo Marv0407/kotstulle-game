@@ -14,7 +14,7 @@ func _on_start_battle_btn_pressed() -> void:
 	start_battle_btn.hide()
 
 func _on_basic_attack_pressed() -> void:
-	var skill = load("res://ressources/PlayerSkills/PlayerAttack.tres")
+	var skill = load("res://resources/PlayerSkills/PlayerAttack.tres")
 	battle_manager.start_target_selection(battle_manager.get_current_actor(), skill)
 
 func _on_button_pressed() -> void:

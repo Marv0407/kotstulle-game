@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="SkillData" load_steps=4 format=3 uid="uid://dgidyqwyuvip7"]
+
+[ext_resource type="Script" uid="uid://cnf30h5gv0j2w" path="res://scripts/ResourceSkripts/SkillData/Modules/SkillEffect.gd" id="1_a24ol"]
+[ext_resource type="Script" uid="uid://d0ehdwbbf3lbd" path="res://scripts/ResourceSkripts/SkillData/Base/SkillData.gd" id="2_t3h3k"]
+[ext_resource type="PackedScene" uid="uid://gm8oertihbmx" path="res://scenes/HitEffect.tscn" id="3_4u1ds"]
+
+[resource]
+script = ExtResource("2_t3h3k")
+vfx_scene = ExtResource("3_4u1ds")
+visible_in_menu = false
+metadata/_custom_type_script = "uid://d0ehdwbbf3lbd"

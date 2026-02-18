@@ -4,7 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://7p25i524blrh" path="res://scenes/Player.tscn" id="1_fodck"]
 [ext_resource type="Texture2D" uid="uid://dp21td8yk1lv0" path="res://assets/tilesets/test_tileset/[A]_type1/[A]Dirt1-Dirt2_pipo.png" id="1_jpasy"]
 [ext_resource type="PackedScene" uid="uid://daw87aehw5pcd" path="res://scenes/Encounter.tscn" id="3_ndu6v"]
-[ext_resource type="Resource" uid="uid://bd7v43x2tcjtu" path="res://ressources/Encounter/TalahonRentner.tres" id="5_q04aa"]
+[ext_resource type="Resource" uid="uid://bd7v43x2tcjtu" path="res://resources/Encounter/TalahonRentner.tres" id="5_q04aa"]
 [ext_resource type="PackedScene" uid="uid://d0kcksev6mafn" path="res://scenes/InGameMenu.tscn" id="6_s2mfq"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_ndu6v"]

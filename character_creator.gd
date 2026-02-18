@@ -13,10 +13,10 @@ extends Control
 @onready var class_description = $Panel2/ClassDescription
 
 var class_options: Array[String] = [
-	"res://ressources/PlayerCharacters/Hero.tres",
-	"res://ressources/PlayerCharacters/Warrior.tres",
-	"res://ressources/PlayerCharacters/Mage.tres",
-	"res://ressources/PlayerCharacters/Rogue.tres",
+	"res://resources/PlayerCharacters/Hero.tres",
+	"res://resources/PlayerCharacters/Warrior.tres",
+	"res://resources/PlayerCharacters/Mage.tres",
+	"res://resources/PlayerCharacters/Rogue.tres",
 ]
 
 func _ready():

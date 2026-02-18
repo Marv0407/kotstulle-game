@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="SkillData" load_steps=7 format=3 uid="uid://cysvirbbtdpos"]
+
+[ext_resource type="Script" uid="uid://cnf30h5gv0j2w" path="res://scripts/ResourceSkripts/SkillData/Modules/SkillEffect.gd" id="1_u8teb"]
+[ext_resource type="Resource" uid="uid://bvqcmf26peen0" path="res://resources/Skills/PlayerSkills/Feuerball/FeuerballDamage.tres" id="2_j3awt"]
+[ext_resource type="Resource" uid="uid://x0xnsx8hiobt" path="res://resources/Skills/SkillEffects/StatusApplication/Burn100.tres" id="3_daifo"]
+[ext_resource type="Script" uid="uid://d0ehdwbbf3lbd" path="res://scripts/ResourceSkripts/SkillData/Base/SkillData.gd" id="4_fwcap"]
+[ext_resource type="Resource" uid="uid://6al4fh4ltdkt" path="res://resources/Skills/Targeting/Manual_Enemy_Alive.tres" id="5_s8ewg"]
+[ext_resource type="PackedScene" uid="uid://gm8oertihbmx" path="res://scenes/HitEffect.tscn" id="6_7e0bn"]
+
+[resource]
+script = ExtResource("4_fwcap")
+skill_name = "Feuerball"
+description = "massiver Feuerball junge"
+mp_cost = 5
+targeting = ExtResource("5_s8ewg")
+effects = Array[ExtResource("1_u8teb")]([ExtResource("2_j3awt"), ExtResource("3_daifo")])
+vfx_scene = ExtResource("6_7e0bn")
+metadata/_custom_type_script = "uid://d0ehdwbbf3lbd"

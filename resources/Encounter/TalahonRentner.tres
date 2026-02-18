@@ -2,8 +2,8 @@
 
 [ext_resource type="Script" uid="uid://b4vfx11poblgj" path="res://scripts/ResourceSkripts/char_data.gd" id="1_4q4ay"]
 [ext_resource type="Script" uid="uid://cugt2hspvgpp8" path="res://scripts/ResourceSkripts/EncounterData.gd" id="2_j8uof"]
-[ext_resource type="Resource" uid="uid://cdo0oen0bff3p" path="res://ressources/Enemies/Talahons.tres" id="2_tlg4j"]
-[ext_resource type="Resource" uid="uid://dayx4q8vorwm3" path="res://ressources/Enemies/Rentner.tres" id="3_g7m63"]
+[ext_resource type="Resource" uid="uid://cdo0oen0bff3p" path="res://resources/Enemies/Talahons.tres" id="2_tlg4j"]
+[ext_resource type="Resource" uid="uid://dayx4q8vorwm3" path="res://resources/Enemies/Rentner.tres" id="3_g7m63"]
 
 
 [resource]
