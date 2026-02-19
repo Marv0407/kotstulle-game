@@ -7,5 +7,5 @@ script = ExtResource("1_wljaf")
 base_damage = 6
 scaling_factor = 0.5
 hit_count = 3
-delay_between_hits = 0.3
+delay_between_hits = 1.2
 metadata/_custom_type_script = "uid://dlcgln540345m"
