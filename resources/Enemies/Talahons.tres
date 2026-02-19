@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://b4vfx11poblgj" path="res://scripts/ResourceSkripts/char_data.gd" id="1_8l5h6"]
 [ext_resource type="Texture2D" uid="uid://dmtq6i63iicvx" path="res://assets/sprites/talahon_b.png" id="2_t20ei"]
 [ext_resource type="Script" uid="uid://d0ehdwbbf3lbd" path="res://scripts/ResourceSkripts/SkillData/Base/SkillData.gd" id="2_ts8p0"]
-[ext_resource type="Resource" uid="uid://b5eif5h33k1ti" path="res://resources/Skills/EnemySkills/Schattenboxen.tres" id="3_0h4ic"]
+[ext_resource type="Resource" uid="uid://b5eif5h33k1ti" path="res://resources/Skills/EnemySkills/Schattenboxen/Schattenboxen.tres" id="3_0h4ic"]
 
 
 [resource]

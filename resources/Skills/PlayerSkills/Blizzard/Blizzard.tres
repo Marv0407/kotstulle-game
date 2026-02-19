@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="SkillData" load_steps=7 format=3 uid="uid://chb4op6cxiv4y"]
+
+[ext_resource type="Script" uid="uid://cnf30h5gv0j2w" path="res://scripts/ResourceSkripts/SkillData/Modules/SkillEffect.gd" id="1_21ur2"]
+[ext_resource type="Script" uid="uid://d0ehdwbbf3lbd" path="res://scripts/ResourceSkripts/SkillData/Base/SkillData.gd" id="2_eg87a"]
+[ext_resource type="Resource" uid="uid://d4fnyv2h6rr8" path="res://resources/Skills/PlayerSkills/Blizzard/BlizzardDamage.tres" id="2_gwlby"]
+[ext_resource type="Resource" uid="uid://q74gmwyxooc6" path="res://resources/Skills/PlayerSkills/Blizzard/BlizzardPresentation.tres" id="2_hg8wo"]
+[ext_resource type="Resource" uid="uid://6t36xsldr1u6" path="res://resources/Skills/Targeting/All_Enemy_Alive.tres" id="4_dlc8n"]
+[ext_resource type="PackedScene" uid="uid://gm8oertihbmx" path="res://scenes/HitEffect.tscn" id="5_dlc8n"]
+
+[resource]
+script = ExtResource("2_eg87a")
+skill_name = "Blizzard"
+mp_cost = 25
+targeting = ExtResource("4_dlc8n")
+effects = Array[ExtResource("1_21ur2")]([ExtResource("2_hg8wo"), ExtResource("2_gwlby")])
+vfx_scene = ExtResource("5_dlc8n")
+metadata/_custom_type_script = "uid://d0ehdwbbf3lbd"

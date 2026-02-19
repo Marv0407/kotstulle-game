@@ -19,6 +19,7 @@ bg_color = Color(0.12955844, 0.1295585, 0.12955838, 1)
 bg_color = Color(0.48335385, 0.6233852, 1, 1)
 
 [node name="PartyMemberUi" type="HBoxContainer"]
+mouse_filter = 0
 script = ExtResource("1_2ed12")
 
 [node name="NameLabel" type="Label" parent="."]

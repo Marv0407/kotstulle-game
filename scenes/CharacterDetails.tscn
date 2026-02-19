@@ -1,0 +1,380 @@
+[gd_scene load_steps=5 format=3 uid="uid://tq68d37t2lco"]
+
+[ext_resource type="Script" uid="uid://do4wybo8cmjsy" path="res://scripts/character_details.gd" id="1_22q5o"]
+[ext_resource type="Texture2D" uid="uid://do6usik1g3hr0" path="res://icon.svg" id="1_sohga"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_22q5o"]
+content_margin_left = 6.0
+content_margin_top = 6.0
+content_margin_right = 12.0
+content_margin_bottom = 12.0
+bg_color = Color(0, 0.0050812177, 0.11261659, 0.6745098)
+border_width_left = 8
+border_width_top = 8
+border_width_right = 8
+border_width_bottom = 8
+border_blend = true
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_66iqc"]
+bg_color = Color(0.25565878, 0.2556588, 0.2556587, 1)
+draw_center = false
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(1, 1, 1, 1)
+border_blend = true
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[node name="CharacterDetails" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_22q5o")
+
+[node name="Panel2" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_22q5o")
+
+[node name="MarginContainer" type="MarginContainer" parent="Panel2"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 32
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 32
+theme_override_constants/margin_bottom = 16
+
+[node name="Control" type="Control" parent="Panel2/MarginContainer"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Panel2/MarginContainer/Control"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 50
+alignment = 1
+
+[node name="LeftCol" type="VBoxContainer" parent="Panel2/MarginContainer/Control/HBoxContainer"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="PortraitPanel" type="PanelContainer" parent="Panel2/MarginContainer/Control/HBoxContainer/LeftCol"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_styles/panel = SubResource("StyleBoxFlat_66iqc")
+
+[node name="Portrait" type="TextureRect" parent="Panel2/MarginContainer/Control/HBoxContainer/LeftCol/PortraitPanel"]
+layout_mode = 2
+texture = ExtResource("1_sohga")
+stretch_mode = 5
+
+[node name="LevelHBox" type="HBoxContainer" parent="Panel2/MarginContainer/Control/HBoxContainer/LeftCol"]
+layout_mode = 2
+
+[node name="LvlLabel" type="Label" parent="Panel2/MarginContainer/Control/HBoxContainer/LeftCol/LevelHBox"]
+layout_mode = 2
+text = "Lvl."
+
+[node name="LvlVal" type="Label" parent="Panel2/MarginContainer/Control/HBoxContainer/LeftCol/LevelHBox"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "0"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="XPBar" type="ProgressBar" parent="Panel2/MarginContainer/Control/HBoxContainer/LeftCol"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 1
+
+[node name="StatsGrid" type="GridContainer" parent="Panel2/MarginContainer/Control/HBoxContainer/LeftCol"]
+layout_mode = 2
+theme_override_constants/h_separation = 96
+theme_override_constants/v_separation = 18
+columns = 2
+
+[node name="HPValLabel" type="Label" parent="Panel2/MarginContainer/Control/HBoxContainer/LeftCol/StatsGrid"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "HP"
+uppercase = true
+
+[node name="HPVal" type="Label" parent="Panel2/MarginContainer/Control/HBoxContainer/LeftCol/StatsGrid"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(75, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 24
+text = "0"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="AtkValLabel" type="Label" parent="Panel2/MarginContainer/Control/HBoxContainer/LeftCol/StatsGrid"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Atk"
+uppercase = true
+
+[node name="AtkVal" type="Label" parent="Panel2/MarginContainer/Control/HBoxContainer/LeftCol/StatsGrid"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(75, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 24
+text = "0"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="DefValLabel" type="Label" parent="Panel2/MarginContainer/Control/HBoxContainer/LeftCol/StatsGrid"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Def"
+uppercase = true
+
+[node name="DefVal" type="Label" parent="Panel2/MarginContainer/Control/HBoxContainer/LeftCol/StatsGrid"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(75, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 24
+text = "0"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="SPAtkValLabel" type="Label" parent="Panel2/MarginContainer/Control/HBoxContainer/LeftCol/StatsGrid"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "SP. Atk"
+uppercase = true
+
+[node name="SPAtkVal" type="Label" parent="Panel2/MarginContainer/Control/HBoxContainer/LeftCol/StatsGrid"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(75, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 24
+text = "0"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="SPDefValLabel" type="Label" parent="Panel2/MarginContainer/Control/HBoxContainer/LeftCol/StatsGrid"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Sp. Def"
+uppercase = true
+
+[node name="SPDefVal" type="Label" parent="Panel2/MarginContainer/Control/HBoxContainer/LeftCol/StatsGrid"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(75, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 24
+text = "0"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="SpeedValLabel" type="Label" parent="Panel2/MarginContainer/Control/HBoxContainer/LeftCol/StatsGrid"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "SpD"
+uppercase = true
+
+[node name="SpeedVal" type="Label" parent="Panel2/MarginContainer/Control/HBoxContainer/LeftCol/StatsGrid"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(75, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 24
+text = "0"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="LuckValLabel" type="Label" parent="Panel2/MarginContainer/Control/HBoxContainer/LeftCol/StatsGrid"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "LCK"
+uppercase = true
+
+[node name="LuckVal" type="Label" parent="Panel2/MarginContainer/Control/HBoxContainer/LeftCol/StatsGrid"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(75, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 24
+text = "0"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="HPBar" type="ProgressBar" parent="Panel2/MarginContainer/Control/HBoxContainer/LeftCol"]
+layout_mode = 2
+size_flags_vertical = 3
+show_percentage = false
+
+[node name="MPBar" type="ProgressBar" parent="Panel2/MarginContainer/Control/HBoxContainer/LeftCol"]
+layout_mode = 2
+size_flags_vertical = 3
+show_percentage = false
+
+[node name="VSeparator" type="VSeparator" parent="Panel2/MarginContainer/Control/HBoxContainer"]
+layout_mode = 2
+
+[node name="RightCol" type="VBoxContainer" parent="Panel2/MarginContainer/Control/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="EqHeader" type="Label" parent="Panel2/MarginContainer/Control/HBoxContainer/RightCol"]
+layout_mode = 2
+
+[node name="EquipmentGrid" type="GridContainer" parent="Panel2/MarginContainer/Control/HBoxContainer/RightCol"]
+layout_mode = 2
+theme_override_constants/h_separation = 46
+theme_override_constants/v_separation = 8
+columns = 2
+
+[node name="HeadContainer" type="HBoxContainer" parent="Panel2/MarginContainer/Control/HBoxContainer/RightCol/EquipmentGrid"]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="Panel2/MarginContainer/Control/HBoxContainer/RightCol/EquipmentGrid/HeadContainer"]
+custom_minimum_size = Vector2(84, 84)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Panel2/MarginContainer/Control/HBoxContainer/RightCol/EquipmentGrid/HeadContainer"]
+layout_mode = 2
+text = "ItemLabel"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="WeaponContainer" type="HBoxContainer" parent="Panel2/MarginContainer/Control/HBoxContainer/RightCol/EquipmentGrid"]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="Panel2/MarginContainer/Control/HBoxContainer/RightCol/EquipmentGrid/WeaponContainer"]
+custom_minimum_size = Vector2(84, 84)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Panel2/MarginContainer/Control/HBoxContainer/RightCol/EquipmentGrid/WeaponContainer"]
+layout_mode = 2
+text = "ItemLabel"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="ChestContainer" type="HBoxContainer" parent="Panel2/MarginContainer/Control/HBoxContainer/RightCol/EquipmentGrid"]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="Panel2/MarginContainer/Control/HBoxContainer/RightCol/EquipmentGrid/ChestContainer"]
+custom_minimum_size = Vector2(84, 84)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Panel2/MarginContainer/Control/HBoxContainer/RightCol/EquipmentGrid/ChestContainer"]
+layout_mode = 2
+text = "ItemLabel"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="OffhandContainer" type="HBoxContainer" parent="Panel2/MarginContainer/Control/HBoxContainer/RightCol/EquipmentGrid"]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="Panel2/MarginContainer/Control/HBoxContainer/RightCol/EquipmentGrid/OffhandContainer"]
+custom_minimum_size = Vector2(84, 84)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Panel2/MarginContainer/Control/HBoxContainer/RightCol/EquipmentGrid/OffhandContainer"]
+layout_mode = 2
+text = "ItemLabel"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="ArmsContainer" type="HBoxContainer" parent="Panel2/MarginContainer/Control/HBoxContainer/RightCol/EquipmentGrid"]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="Panel2/MarginContainer/Control/HBoxContainer/RightCol/EquipmentGrid/ArmsContainer"]
+custom_minimum_size = Vector2(84, 84)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Panel2/MarginContainer/Control/HBoxContainer/RightCol/EquipmentGrid/ArmsContainer"]
+layout_mode = 2
+text = "ItemLabel"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="AccessoryContainer" type="HBoxContainer" parent="Panel2/MarginContainer/Control/HBoxContainer/RightCol/EquipmentGrid"]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="Panel2/MarginContainer/Control/HBoxContainer/RightCol/EquipmentGrid/AccessoryContainer"]
+custom_minimum_size = Vector2(84, 84)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Panel2/MarginContainer/Control/HBoxContainer/RightCol/EquipmentGrid/AccessoryContainer"]
+layout_mode = 2
+text = "ItemLabel"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="LegContainer" type="HBoxContainer" parent="Panel2/MarginContainer/Control/HBoxContainer/RightCol/EquipmentGrid"]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="Panel2/MarginContainer/Control/HBoxContainer/RightCol/EquipmentGrid/LegContainer"]
+custom_minimum_size = Vector2(84, 84)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Panel2/MarginContainer/Control/HBoxContainer/RightCol/EquipmentGrid/LegContainer"]
+layout_mode = 2
+text = "ItemLabel"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="AccessoryContainer2" type="HBoxContainer" parent="Panel2/MarginContainer/Control/HBoxContainer/RightCol/EquipmentGrid"]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="Panel2/MarginContainer/Control/HBoxContainer/RightCol/EquipmentGrid/AccessoryContainer2"]
+custom_minimum_size = Vector2(84, 84)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Panel2/MarginContainer/Control/HBoxContainer/RightCol/EquipmentGrid/AccessoryContainer2"]
+layout_mode = 2
+text = "ItemLabel"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="ShoeContainer" type="HBoxContainer" parent="Panel2/MarginContainer/Control/HBoxContainer/RightCol/EquipmentGrid"]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="Panel2/MarginContainer/Control/HBoxContainer/RightCol/EquipmentGrid/ShoeContainer"]
+custom_minimum_size = Vector2(84, 84)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Panel2/MarginContainer/Control/HBoxContainer/RightCol/EquipmentGrid/ShoeContainer"]
+layout_mode = 2
+text = "ItemLabel"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="Panel2/MarginContainer/Control/HBoxContainer/RightCol"]
+layout_mode = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Panel2/MarginContainer/Control/HBoxContainer/RightCol"]
+layout_mode = 2
+vertical_scroll_mode = 0
+
+[node name="SkillVBox" type="VBoxContainer" parent="Panel2/MarginContainer/Control/HBoxContainer/RightCol/ScrollContainer"]
+layout_mode = 2

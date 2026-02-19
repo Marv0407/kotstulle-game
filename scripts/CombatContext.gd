@@ -14,3 +14,12 @@ func apply_status(user, target, status):
 
 func log(text, color):
 	manager.post_log(text, color)
+
+func retarget(user, targeting_data):
+	var config = {
+		"target_pool": targeting_data.target_pool,
+		"state": targeting_data.target_state,
+		"selector": targeting_data.target_selector,
+		"count": targeting_data.target_count
+	}
+	return manager.get_targets_dynamic(user, config)

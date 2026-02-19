@@ -52,6 +52,18 @@ func get_hp() -> int:
 func get_lvl() -> int:
 	return data.level
 
+func get_atk():
+	return data.atk
+
+func get_sp_atk():
+	return data.sp_atk
+
+func get_def():
+	return data.def
+
+func get_sp_def():
+	return data.sp_def
+
 func get_stat(stat_name: String) -> int:
 	var base_value = data.get(stat_name)
 	var multiplier = 1.0

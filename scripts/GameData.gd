@@ -88,6 +88,7 @@ func _apply_level_up_stats(hero: Dictionary):
 		hero["def"] += res.def_growth
 		hero["sp_atk"] += res.sp_atk_growth
 		hero["sp_def"] += res.sp_def_growth
+		hero["luck"] += res.luck_growth
 		hero["speed"] += res.speed_growth
 		hero["current_hp"] = hero["max_hp"] # Vollständige Heilung beim Level-Up
 		print("Level Up für ", hero["name"], "!")

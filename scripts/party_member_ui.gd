@@ -1,5 +1,7 @@
 extends HBoxContainer
 
+signal selected(hero_data: Dictionary)
+
 @onready var name_label: Label = $NameLabel
 @onready var hp_label: Label = $HPBar/HPLabel
 @onready var hp_bar: ProgressBar = $HPBar
@@ -7,6 +9,7 @@ extends HBoxContainer
 
 var character: BattleCharacter
 var ghost_tween: Tween
+var data: CharData
 
 func setup(bc: BattleCharacter) -> void:
 	character = bc
@@ -37,7 +40,6 @@ func update_hp(old_hp: int):
 func adjust_ghost_hp(target_value: int):
 	if ghost_tween:
 		ghost_tween.kill()
-	
 	ghost_tween = create_tween()
 	ghost_tween.tween_interval(0.5)
 	ghost_tween.tween_property(ghost_bar, "value", target_value, 0.4)\
@@ -62,7 +64,10 @@ func update_display(data: Dictionary):
 	hp_bar.max_value = data["max_hp"]
 	hp_bar.value = data["current_hp"]
 	hp_label.text = str(data["current_hp"]) + " / " + str(data["max_hp"])
-
 	if has_node("XPLabel"):
 		var req_xp = GameData.get_required_xp(data["level"])
 		$XPLabel.text = "XP: %d / %d" % [data["xp"], req_xp]
+
+func _gui_input(event):
+	if event.is_action_pressed("ui_accept"):
+		emit_signal("selected", data)

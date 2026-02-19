@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="SkillData" load_steps=5 format=3 uid="uid://b5eif5h33k1ti"]
+
+[ext_resource type="Script" uid="uid://cnf30h5gv0j2w" path="res://scripts/ResourceSkripts/SkillData/Modules/SkillEffect.gd" id="1_3ykam"]
+[ext_resource type="Resource" uid="uid://byd18k4odxq1m" path="res://resources/Skills/EnemySkills/Schattenboxen/SchattenboxenDamage.tres" id="2_8gpk2"]
+[ext_resource type="Script" uid="uid://d0ehdwbbf3lbd" path="res://scripts/ResourceSkripts/SkillData/Base/SkillData.gd" id="3_w00nm"]
+[ext_resource type="Resource" uid="uid://6al4fh4ltdkt" path="res://resources/Skills/Targeting/Manual_Enemy_Alive.tres" id="4_hx6ur"]
+
+[resource]
+script = ExtResource("3_w00nm")
+skill_name = "Schattenboxen"
+targeting = ExtResource("4_hx6ur")
+effects = Array[ExtResource("1_3ykam")]([ExtResource("2_8gpk2")])
+visible_in_menu = false
+metadata/_custom_type_script = "uid://d0ehdwbbf3lbd"

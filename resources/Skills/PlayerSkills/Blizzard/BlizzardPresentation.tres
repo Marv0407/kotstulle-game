@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="PresentationEffect" load_steps=2 format=3 uid="uid://q74gmwyxooc6"]
+
+[ext_resource type="Script" uid="uid://xr0cdlhp6n0f" path="res://scripts/ResourceSkripts/SkillData/Modules/PresentationEffect.gd" id="1_dyv42"]
+
+[resource]
+script = ExtResource("1_dyv42")
+screen_tint = Color(0.49155343, 0.65355146, 1, 0.5411765)
+tint_duration = 0.8
+metadata/_custom_type_script = "uid://xr0cdlhp6n0f"

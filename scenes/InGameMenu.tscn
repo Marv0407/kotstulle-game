@@ -1,7 +1,8 @@
-[gd_scene load_steps=4 format=3 uid="uid://d0kcksev6mafn"]
+[gd_scene load_steps=5 format=3 uid="uid://d0kcksev6mafn"]
 
 [ext_resource type="Script" uid="uid://b8x04g2xbmitx" path="res://scripts/in_game_menu.gd" id="1_kkpiy"]
 [ext_resource type="PackedScene" uid="uid://xm18nkpojt6g" path="res://scenes/PartyMemberUI.tscn" id="2_d7o6g"]
+[ext_resource type="PackedScene" uid="uid://tq68d37t2lco" path="res://scenes/CharacterDetails.tscn" id="3_cxhge"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_d7o6g"]
 content_margin_left = 6.0
@@ -19,6 +20,7 @@ border_blend = true
 process_mode = 3
 script = ExtResource("1_kkpiy")
 party_member_ui_scene = ExtResource("2_d7o6g")
+character_details_scene = ExtResource("3_cxhge")
 
 [node name="PanelContainer" type="PanelContainer" parent="."]
 anchors_preset = 3
@@ -63,3 +65,4 @@ unique_name_in_owner = true
 layout_mode = 2
 
 [connection signal="pressed" from="PanelContainer/MainContainer/ButtonList/PartyBtn" to="." method="_on_party_btn_pressed"]
+[connection signal="pressed" from="PanelContainer/MainContainer/ButtonList/QuitBtn" to="." method="_on_quit_btn_pressed"]

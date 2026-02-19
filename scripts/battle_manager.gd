@@ -234,7 +234,7 @@ func apply_skill_effects(attacker: BattleCharacter, target: BattleCharacter, dam
 		post_log(attacker.data.name + " nutzt " + skill.skill_name + " für " + str(damage) + " Schaden.", Color.WHITE)
 	else:
 		post_log(target.data.name + " erleidet " + str(damage) + " Schaden durch Effekt.", Color.LIGHT_CORAL)
-	
+
 	# UI Update für Party
 	if target in party:
 		for ui in party_panel.get_children():
@@ -254,7 +254,7 @@ func apply_skill_effects(attacker: BattleCharacter, target: BattleCharacter, dam
 			get_tree().current_scene.add_child(vfx_instance)
 			vfx_instance.global_position = target.battle_node.global_position
 			vfx_instance.emitting = true
-			
+
 		spawn_damage_number(target.battle_node.global_position, damage)
 
 	if target.current_hp <= 0:
@@ -364,7 +364,6 @@ func start_target_selection(user: BattleCharacter, skill: SkillData):
 
 func post_log(text: String, color: Color = Color.WHITE):
 	print(text) 
-
 	var label = Label.new()
 	label.text = text
 	label.add_theme_font_size_override("font_size", 12)
@@ -387,6 +386,21 @@ func spawn_damage_number(pos: Vector2, value: int):
 	if value > 50: color = Color.YELLOW #FIXME example code
 
 	dmg_node.setup(value, color)
+
+func flash_screen(color: Color, duration: float):
+	$ColorRect.modulate = color
+	$ColorRect.visible = true
+	await get_tree().create_timer(duration).timeout
+	$ColorRect.visible = false
+
+func play_skill_sfx(stream: AudioStream):
+	if not stream:
+		return
+	var player = AudioStreamPlayer.new()
+	add_child(player)
+	player.stream = stream
+	player.play()
+	player.finished.connect(player.queue_free)
 
 func set_player_ui_enabled(enabled: bool):
 	var first_button : Button = null

@@ -1,17 +1,15 @@
-[gd_resource type="Resource" script_class="CharData" load_steps=7 format=3 uid="uid://jg5qgo206jnw"]
+[gd_resource type="Resource" script_class="CharData" load_steps=6 format=3 uid="uid://jg5qgo206jnw"]
 
 [ext_resource type="Texture2D" uid="uid://dya0kjpyp6m2a" path="res://assets/portraits/jotchua_mage.png" id="1_umwh6"]
 [ext_resource type="Script" uid="uid://b4vfx11poblgj" path="res://scripts/ResourceSkripts/char_data.gd" id="2_fsecm"]
 [ext_resource type="Script" uid="uid://d0ehdwbbf3lbd" path="res://scripts/ResourceSkripts/SkillData/Base/SkillData.gd" id="3_km5tb"]
 [ext_resource type="Resource" uid="uid://dgidyqwyuvip7" path="res://resources/Skills/PlayerSkills/PlayerAttack.tres" id="4_6paml"]
-[ext_resource type="Resource" uid="uid://b4whja5r01bmo" path="res://resources/Skills/PlayerSkills/feature_tester.tres" id="5_fucn1"]
-[ext_resource type="Resource" uid="uid://dw0u3emqgo6aw" path="res://resources/Skills/PlayerSkills/random-duo.tres" id="6_7bc3s"]
-
-
+[ext_resource type="Resource" uid="uid://cysvirbbtdpos" path="res://resources/Skills/PlayerSkills/Feuerball/Feuerball.tres" id="5_pjgmv"]
 
 [resource]
 script = ExtResource("2_fsecm")
 name = "Mage"
+description = "Du Zauberer! ... Verlass uns!"
 max_hp = 60
 atk = 5
 def = 5
@@ -20,7 +18,11 @@ sp_def = 15
 luck = 10
 speed = 10
 level = 1
+hp_growth = 5
+mp_growth = 15
+atk_growth = 1
+sp_atk_growth = 5
+sp_def_growth = 3
+skills = Array[ExtResource("3_km5tb")]([ExtResource("4_6paml"), ExtResource("5_pjgmv")])
 portrait = ExtResource("1_umwh6")
-description = "Du Zauberer! ... Verlass uns!"
-skills = Array[ExtResource("3_km5tb")]([ExtResource("4_6paml"), ExtResource("5_fucn1"), ExtResource("6_7bc3s")])
 metadata/_custom_type_script = "uid://b4vfx11poblgj"
