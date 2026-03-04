@@ -1,11 +1,13 @@
 extends Control
+@export var character_details_scene: PackedScene
+var current_details_screen = null
 
 func display_hero(hero: Dictionary):
 	# Grundinfos
 	#%NameLabel.text = hero["name"] #TODO
 	%LvlVal.text = "Level " + str(hero["level"])
 	
-	# Stats (GridContainer Pfade anpassen)
+	# Stats
 	%HPVal.text = str(hero["max_hp"])
 	%AtkVal.text = str(hero["atk"])
 	%DefVal.text = str(hero["def"])
@@ -20,7 +22,7 @@ func display_hero(hero: Dictionary):
 	%XPBar.value = hero["xp"]
 	#%XPText.text = str(hero["xp"]) + " / " + str(req_xp) #TODO
 	
-	# Equipment (Wir nehmen an, das Dictionary hat ein "equipment" Feld) #TODO
+	# Equipment #TODO
 	#var eq = hero.get("equipment", {})
 	#%HeadLabel.text = eq.get("head", "Leer")
 	#%BodyLabel.text = eq.get("body", "Leer")

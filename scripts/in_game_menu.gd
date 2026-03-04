@@ -35,6 +35,7 @@ func toggle_menu():
 		$PanelContainer/MainContainer/ButtonList/PartyBtn.grab_focus()
 
 func show_party():
+	is_sub_menu_open = true
 	_clear_content_area()
 	
 	for hero_data in GameData.party_members:

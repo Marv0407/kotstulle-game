@@ -25,8 +25,8 @@ func apply(user, targets: Array, context):
 			var final_damage = calculate_damage_after_defense(raw_damage, target)
 			context.apply_damage(user, target, final_damage)
 
-	if delay_between_hits > 0: 
-		await context.manager.get_tree().create_timer(delay_between_hits).timeout
+		if delay_between_hits > 0 and i < hit_count - 1: 
+			await context.manager.get_tree().create_timer(delay_between_hits).timeout
 
 func calculate_damage_after_defense(raw_damage, target):
 	match damage_type:

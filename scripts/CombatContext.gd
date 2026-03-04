@@ -23,3 +23,9 @@ func retarget(user, targeting_data):
 		"count": targeting_data.target_count
 	}
 	return manager.get_targets_dynamic(user, config)
+
+func flash_screen(color: Color, duration: float):
+	manager.flash_screen(color, duration)
+
+func shake_screen(duration: float, intensity: float):
+	manager.shake_screen(duration, intensity)

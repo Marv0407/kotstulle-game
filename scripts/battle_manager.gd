@@ -44,6 +44,7 @@ var focused_target_index: int = 0
 @onready var gold_gained_label = $"../DebugUI/VictoryPanel/GridContainer/GoldLabel"
 @onready var loot_gained_label = $"../DebugUI/VictoryPanel/GridContainer/LootLabel"
 @onready var victory_button = $"../DebugUI/VictoryPanel/Button"
+@onready var flash_rect = $"../DebugUI/ScreenFlashRect"
 var earned_xp: int = 0
 var earned_gold: int = 0
 var earned_loot: Array[String] = []
@@ -222,7 +223,7 @@ func execute_skill(user: BattleCharacter, skill: SkillData, initial_targets: Arr
 		}
 		targets = get_targets_dynamic(user, config)
 	for effect in skill.effects:
-		effect.apply(user, targets, context)
+		await effect.apply(user, targets, context)
 	await get_tree().create_timer(0.6).timeout
 	next_turn()
 	process_turn()
@@ -388,10 +389,11 @@ func spawn_damage_number(pos: Vector2, value: int):
 	dmg_node.setup(value, color)
 
 func flash_screen(color: Color, duration: float):
-	$ColorRect.modulate = color
-	$ColorRect.visible = true
-	await get_tree().create_timer(duration).timeout
-	$ColorRect.visible = false
+	flash_rect.color = color
+	flash_rect.visible = true
+	var tween = create_tween()
+	tween.tween_property(flash_rect, "color:a", 0.0, duration)
+	tween.tween_callback(func(): flash_rect.visible = false)
 
 func play_skill_sfx(stream: AudioStream):
 	if not stream:
